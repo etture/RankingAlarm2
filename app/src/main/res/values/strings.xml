@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">RankingAlarm2</string>
+    <string name="na">Not Available</string>
+    <string name="create_alarm">Create Alarm</string>
+    <string name="set_alarm">Set Alarm</string>
+    <string name="alarm">Alarm</string>
+    <string name="ranking">Ranking</string>
+    <string name="confirm">Confirm</string>
+    <string name="save">Save</string>
+    <string name="delete">Delete</string>
+    <string name="delete_alarm">Delete Alarm</string>
+    <string name="cancel">Cancel</string>
+    <string name="monday">Monday</string>
+    <string name="mon">Mon</string>
+    <string name="tuesday">Tuesday</string>
+    <string name="tue">Tue</string>
+    <string name="wednesday">Wednesday</string>
+    <string name="wed">Wed</string>
+    <string name="thursday">Thursday</string>
+    <string name="thu">Thu</string>
+    <string name="friday">Friday</string>
+    <string name="fri">Fri</string>
+    <string name="saturday">Saturday</string>
+    <string name="sat">Sat</string>
+    <string name="sunday">Sunday</string>
+    <string name="sun">Sun</string>
+    <string name="am">AM</string>
+    <string name="pm">PM</string>
+    <string name="january">January</string>
+    <string name="jan">Jan.</string>
+    <string name="february">February</string>
+    <string name="feb">Feb.</string>
+    <string name="march">March</string>
+    <string name="mar">Mar.</string>
+    <string name="april">April</string>
+    <string name="apr">Apr.</string>
+    <string name="may">May</string>
+    <string name="june">June</string>
+    <string name="jun">Jun.</string>
+    <string name="july">July</string>
+    <string name="jul">Jul.</string>
+    <string name="august">August</string>
+    <string name="aug">Aug.</string>
+    <string name="september">September</string>
+    <string name="sep">Sep.</string>
+    <string name="october">October</string>
+    <string name="oct">Oct.</string>
+    <string name="november">November</string>
+    <string name="nov">Nov.</string>
+    <string name="december">December</string>
+    <string name="dec">Dec.</string>
+    <string name="dayOfMonth">%1$d</string>
+    <string name="alarmGoingOffIn">Alarm going off in%1$s%2$s%3$s.</string>
+    <string name="days">days</string>
+    <string name="hours">hours</string>
+    <string name="minutes">minutes</string>
+    <string name="alarmAlreadyExists">Alarm already exists.</string>
+    <string name="timeHasPassed">Alarm can\'t be set for a time that has already passed.</string>
+    <string name="editedExistingAlarm">The alarm set at the same time has been replaced.</string>
+
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+</resources>
