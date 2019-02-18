@@ -60,8 +60,10 @@
     <string name="alarmAlreadyExists">Alarm already exists.</string>
     <string name="timeHasPassed">Alarm can\'t be set for a time that has already passed.</string>
     <string name="editedExistingAlarm">The alarm set at the same time has been replaced.</string>
-    <string name="alarmSetBefore5">Can\'t set alarm; I know you\'re not gonna wake up that early.</string>
-    <string name="alarmSetAfter11">Can\'t set alarm; are you lazy or what?</string>
+    <string name="alarmSetBefore5">- Can\'t set alarm -\nI know you\'re not gonna wake up that early.</string>
+    <string name="alarmSetAfter11">- Can\'t set alarm -\nAre you lazy or what?</string>
+    <string name="today">Today</string>
+    <string name="tomorrow">Tomorrow</string>
 
 
     <!-- TODO: Remove or change this placeholder text -->

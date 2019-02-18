@@ -29,7 +29,7 @@ class TimeUpdateService : BaseService() {
         val currentTimeInMillis: Long? = intent?.extras?.getLong("timeInMillis")
         info("onStartCommand() called, currentTime: $currentTimeInMillis")
 
-        inspectAlarmListForTimePassed(currentTimeInMillis!!)
+//        inspectAlarmListForTimePassed(currentTimeInMillis!!)
 
         return START_NOT_STICKY
     }

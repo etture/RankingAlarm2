@@ -14,6 +14,10 @@ data class RangTodayData(
     @ColumnInfo(name = "id")
     var id: Long? = null,
 
+    @ColumnInfo(name = "dateInMillis")
+    var dateInMillis: Long,
+
+    @ColumnInfo(name = "rangToday")
     var rangToday: Boolean = false
 
 ) : Parcelable

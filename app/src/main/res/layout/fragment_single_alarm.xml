@@ -39,6 +39,7 @@
                     android:layout_height="wrap_content"
                     android:text="내일"
                     android:textSize="20sp"
+                    app:mutableText="@{viewModel.getTodayTmrwString()}"
                     />
 
             <TextView
@@ -55,6 +56,7 @@
                     android:layout_height="wrap_content"
                     android:text="2월 16일 (토)"
                     android:textSize="30sp"
+                    app:mutableText="@{viewModel.getDateString()}"
                     />
 
         </LinearLayout>

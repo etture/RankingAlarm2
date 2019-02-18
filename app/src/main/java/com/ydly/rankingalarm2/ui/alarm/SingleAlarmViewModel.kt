@@ -9,9 +9,7 @@ import com.ydly.rankingalarm2.R
 import com.ydly.rankingalarm2.base.BaseViewModel
 import com.ydly.rankingalarm2.data.local.alarm.AlarmData
 import com.ydly.rankingalarm2.data.repository.AlarmDataRepository
-import com.ydly.rankingalarm2.util.DateTimeUtilMillisToUnits
-import com.ydly.rankingalarm2.util.DateTimeUtilUnitsToMillis
-import com.ydly.rankingalarm2.util.SingleEvent
+import com.ydly.rankingalarm2.util.*
 import io.reactivex.Flowable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.rxkotlin.plusAssign
@@ -21,15 +19,16 @@ import org.jetbrains.anko.info
 import java.util.*
 import javax.inject.Inject
 
-const val ACTIVATE = true
-const val DEACTIVATE = false
-
 class SingleAlarmViewModel : BaseViewModel() {
 
     @Inject
     lateinit var alarmDataRepo: AlarmDataRepository
 
     private lateinit var myAlarm: AlarmData
+    // Local state variable for whether ToggleButton is toggled on or off
+    private var isToggled = false
+    // Local state variable for the target date for the upcoming alarm to be set
+    private lateinit var targetDate: DateTimeUtilMillisToUnits
 
     // Toast event to be observed for showing toasts on View
     private val newToast: MutableLiveData<SingleEvent<String>> = MutableLiveData()
@@ -49,15 +48,17 @@ class SingleAlarmViewModel : BaseViewModel() {
     val hour = MutableLiveData<Int>()
     val minute = MutableLiveData<Int>()
 
-    // For setting TimeTextView timeString
-    private val timeString = MutableLiveData<String>()
-    private val ampmString = MutableLiveData<String>()
-
     // For setting TimePicker and TimeTextView visibility (1-way DataBinding)
     private val timePickerVisibility = MutableLiveData<Boolean>()
     private val timeTxtVwVisibility = MutableLiveData<Boolean>()
 
-    private var isToggled = false
+    // For setting TimeString
+    private val timeString = MutableLiveData<String>()
+    private val ampmString = MutableLiveData<String>()
+
+    // For setting DateString
+    private val dateString = MutableLiveData<String>()
+    private val todayTmrwString = MutableLiveData<String>()
 
     // MediatorLiveData for 2-way DataBinding on hour
     private val hourMediator = MediatorLiveData<Int>().apply {
@@ -82,6 +83,7 @@ class SingleAlarmViewModel : BaseViewModel() {
     init {
         info("Values before initialization: hour: ${hour.value}, minute: ${minute.value}, isToggled: $isToggled")
         initAlarmItem()
+        setTargetDate()
         info("Values after initialization: hour: ${hour.value}, minute: ${minute.value}, isToggled: $isToggled")
     }
 
@@ -279,6 +281,75 @@ class SingleAlarmViewModel : BaseViewModel() {
         }
     }
 
+    private fun setTargetDate() {
+        val rightNow = Calendar.getInstance()
+        targetDate = DateTimeUtilMillisToUnits(rightNow.timeInMillis)
+
+        when {
+            // If the time is before 5 a.m., then the alarm should be set to today
+            rightNow.get(Calendar.HOUR_OF_DAY) < 5 -> {
+                todayTmrwString.value = res.getString(R.string.today)
+            }
+            // If the time is at or after 11 a.m., then the alarm should be set to tomorrow
+            rightNow.get(Calendar.HOUR_OF_DAY) >= 11 -> {
+                targetDate.add(Calendar.DAY_OF_MONTH, 1)
+                todayTmrwString.value = res.getString(R.string.tomorrow)
+            }
+            // Otherwise, if the alarm rang today, then the alarm should be set to tomorrow
+            // And if it hasn't rung yet today, then it should be set to today
+            else -> {
+                /// TEMPORARY!!!!
+                // For now, TEMPORARILY just set it to tomorrow
+                targetDate.add(Calendar.DAY_OF_MONTH, 1)
+                todayTmrwString.value = res.getString(R.string.tomorrow)
+                /// TEMPORARY!!!!
+            }
+        }
+        buildDateTodayTmrwString()
+    }
+
+    private fun buildDateTodayTmrwString() {
+        var month: String
+        val dayOfMonth: String = res.getString(R.string.dayOfMonth, targetDate.dayOfMonth)
+        var dayOfWeek: String
+
+        with(targetDate.month) {
+            month = when (this) {
+                Calendar.JANUARY -> res.getString(R.string.jan)
+                Calendar.FEBRUARY -> res.getString(R.string.feb)
+                Calendar.MARCH -> res.getString(R.string.mar)
+                Calendar.APRIL -> res.getString(R.string.apr)
+                Calendar.MAY -> res.getString(R.string.may)
+                Calendar.JUNE -> res.getString(R.string.jun)
+                Calendar.JULY -> res.getString(R.string.jul)
+                Calendar.AUGUST -> res.getString(R.string.aug)
+                Calendar.SEPTEMBER -> res.getString(R.string.sep)
+                Calendar.OCTOBER -> res.getString(R.string.oct)
+                Calendar.NOVEMBER -> res.getString(R.string.nov)
+                Calendar.DECEMBER -> res.getString(R.string.dec)
+                else -> res.getString(R.string.na)
+            }
+            info("Month/Date: $month $dayOfMonth")
+        }
+
+        with(targetDate.dayOfWeek) {
+            dayOfWeek = when (this) {
+                Calendar.MONDAY -> res.getString(R.string.mon)
+                Calendar.TUESDAY -> res.getString(R.string.tue)
+                Calendar.WEDNESDAY -> res.getString(R.string.wed)
+                Calendar.THURSDAY -> res.getString(R.string.thu)
+                Calendar.FRIDAY -> res.getString(R.string.fri)
+                Calendar.SATURDAY -> res.getString(R.string.sat)
+                Calendar.SUNDAY -> res.getString(R.string.sun)
+                else -> res.getString(R.string.na)
+            }
+            info("Day of Week: $dayOfWeek")
+        }
+
+        dateString.value = "$month $dayOfMonth ($dayOfWeek)"
+        info("Full dayOfMonth string: ${dateString.value}")
+    }
+
     // Function for building the timeString to be displayed whenever alarm is activated
     private fun buildTimeString() {
         val ampm = if (hour.value!! < 12) R.string.am else R.string.pm
@@ -320,6 +391,11 @@ class SingleAlarmViewModel : BaseViewModel() {
         toggleChange(toggleButton.isChecked)
     }
 
+    // Update the dateString showing the date, called on onResume()
+    fun updateDate() {
+        setTargetDate()
+    }
+
 
     //========= Functions accessible by View (DataBinding) ==========
 
@@ -327,5 +403,7 @@ class SingleAlarmViewModel : BaseViewModel() {
     fun getTimePickerVisibility(): LiveData<Boolean> = timePickerVisibility
     fun getTimeString(): LiveData<String> = timeString
     fun getAmpmString(): LiveData<String> = ampmString
+    fun getDateString(): LiveData<String> = dateString
+    fun getTodayTmrwString(): LiveData<String> = todayTmrwString
 
 }
