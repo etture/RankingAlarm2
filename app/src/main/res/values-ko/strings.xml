@@ -59,4 +59,6 @@
     <string name="alarmAlreadyExists">알람이 이미 존재합니다.</string>
     <string name="timeHasPassed">지나간 시간에는 알람을 설정할 수 없습니다.</string>
     <string name="editedExistingAlarm">같은 시간에 설정된 알람이 수정되었습니다.</string>
+    <string name="cancel_alarm">알람 취소</string>
+    <string name="start_alarm">알람 시작</string>
 </resources>

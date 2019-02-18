@@ -52,6 +52,11 @@ class AlarmFragment : BaseFragment() {
         )
     }
 
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        info("onActivityCreated() called")
+    }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         bind(inflater, container)
         info("onCreateView() called")

@@ -52,6 +52,17 @@ class AlarmDataRepository : BaseRepository() {
         return Pair(originalAlarmData, newAlarmData)
     }
 
+    private fun _toggleChange(originalAlarmData: AlarmData, isToggledOn: Boolean, editedTimeInMillis: Long): Pair<AlarmData, AlarmData> {
+        val newAlarmData = AlarmData(
+            id = originalAlarmData.id,
+            timeInMillis = editedTimeInMillis,
+            isToggledOn = isToggledOn
+        )
+        alarmDataDao.update(newAlarmData)
+        info("Alarm Item Updated: $newAlarmData")
+        return Pair(originalAlarmData, newAlarmData)
+    }
+
     private fun _updateDatesToNextDay(ids: List<Long>) {
         alarmDataDao.updateDatesToNextDay(ids)
         info("Alarm Items Date Set to Next Day, ids: $ids")
@@ -86,6 +97,10 @@ class AlarmDataRepository : BaseRepository() {
 
     fun toggleChange(originalAlarmData: AlarmData, isToggledOn: Boolean): Pair<AlarmData, AlarmData> {
         return _toggleChange(originalAlarmData, isToggledOn)
+    }
+
+    fun toggleChange(originalAlarmData: AlarmData, isToggledOn: Boolean, editedTimeInMillis: Long): Pair<AlarmData, AlarmData> {
+        return _toggleChange(originalAlarmData, isToggledOn, editedTimeInMillis)
     }
 
     fun updateDatesToNextDay(ids: List<Long>) {

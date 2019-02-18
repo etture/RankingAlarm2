@@ -4,10 +4,7 @@ import com.ydly.rankingalarm2.injection.module.AppModule
 import com.ydly.rankingalarm2.injection.module.RepositoryModule
 import com.ydly.rankingalarm2.injection.module.ResourceModule
 import com.ydly.rankingalarm2.injection.scope.ViewModelScope
-import com.ydly.rankingalarm2.ui.alarm.AlarmItemViewModel
-import com.ydly.rankingalarm2.ui.alarm.AlarmViewModel
-import com.ydly.rankingalarm2.ui.alarm.CreateAlarmViewModel
-import com.ydly.rankingalarm2.ui.alarm.EditAlarmViewModel
+import com.ydly.rankingalarm2.ui.alarm.*
 import dagger.Component
 
 @ViewModelScope
@@ -18,6 +15,7 @@ interface ViewModelInjector {
     fun inject(alarmItemViewModel: AlarmItemViewModel)
     fun inject(createAlarmViewModel: CreateAlarmViewModel)
     fun inject(editAlarmViewModel: EditAlarmViewModel)
+    fun inject(singleAlarmViewModel: SingleAlarmViewModel)
 
     @Component.Builder
     interface Builder {

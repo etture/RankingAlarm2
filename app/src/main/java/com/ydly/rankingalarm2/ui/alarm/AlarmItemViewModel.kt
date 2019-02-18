@@ -148,7 +148,7 @@ class AlarmItemViewModel : BaseViewModel() {
     }
 
 
-    //========= Functions accessible by View (data access) ==========
+    //========= Functions accessible by View (DataBinding) ==========
 
     fun getAmPm(): LiveData<String> = ampm
     fun getTime(): LiveData<String> = time

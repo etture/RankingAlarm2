@@ -21,4 +21,4 @@ data class AlarmData(
     @ColumnInfo(name = "isToggledOn")
     var isToggledOn: Boolean = false
 
-): Parcelable
+) : Parcelable
