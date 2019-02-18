@@ -54,6 +54,7 @@ class SingleAlarmFragment : BaseFragment() {
         // If alarm from DB is deactivated, then set ToggleButton to unchecked
         viewModel.observeInitialToggleSetEvent().observe(this, Observer {
             it?.getContentIfNotHandled()?.let { (initialToggledOn, initialHour, initialMinute) ->
+                info("observeInitialToggleSetEvent() -> initialToggledOn: $initialToggledOn")
                 binding.toggleButton.isChecked = initialToggledOn
                 if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                     binding.singleAlarmFragTimePicker.hour = initialHour
@@ -61,6 +62,17 @@ class SingleAlarmFragment : BaseFragment() {
                 } else {
                     binding.singleAlarmFragTimePicker.currentHour = initialHour
                     binding.singleAlarmFragTimePicker.currentMinute = initialMinute
+                }
+            }
+        })
+
+        // Observe function in ViewModel to set the ToggleButton back off
+        // For situations where the time of the attempted alarm is out of the accepted range (05:00 ~ 10:59)
+        viewModel.observeToggleBackOffEvent().observe(this, Observer {
+            it?.getContentIfNotHandled()?.let { toggleBackOff ->
+                info("observeToggleBackOffEvent() -> toggleBackOff: $toggleBackOff")
+                if(!toggleBackOff) {
+                    binding.toggleButton.isChecked = toggleBackOff
                 }
             }
         })

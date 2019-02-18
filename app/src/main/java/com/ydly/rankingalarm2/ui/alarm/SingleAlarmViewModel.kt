@@ -38,6 +38,9 @@ class SingleAlarmViewModel : BaseViewModel() {
     // Only called once during ViewModel initialization
     private val initialSetEvent: MutableLiveData<SingleEvent<Triple<Boolean, Int, Int>>> = MutableLiveData()
 
+    // Toggle set event to set the toggle back off if the alarm time was not appropriate
+    private val toggleBackOffEvent: MutableLiveData<SingleEvent<Boolean>> = MutableLiveData()
+
     // Activate/Deactive alarm event to set clock visibility status
     // Boolean value denotes whether ToggleButton was toggled on or off
     private val activateAlarmEvent: MutableLiveData<SingleEvent<Boolean>> = MutableLiveData()
@@ -153,52 +156,78 @@ class SingleAlarmViewModel : BaseViewModel() {
             // Turned on, so update AlarmData with updated timeInMillis and isToggled values
             // and activate the new alarm
             if (changedToggleStatus) {
-                // Check to see what day the alarm should be set to -- today or tomorrow
-                val rightNow = Calendar.getInstance()
-                val dateTimeUtil = DateTimeUtilUnitsToMillis(
-                    year = rightNow.get(Calendar.YEAR),
-                    month = rightNow.get(Calendar.MONTH),
-                    dayOfMonth = rightNow.get(Calendar.DAY_OF_MONTH),
-                    hour = hour.value!!,
-                    minute = minute.value!!
-                )
 
-                // If before noon, then set to this time today
-                if(rightNow.get(Calendar.HOUR_OF_DAY) < 12) {
-                    subscription += Flowable.fromCallable {
-                        alarmDataRepo.toggleChange(
-                            myAlarm,
-                            changedToggleStatus,
-                            dateTimeUtil.getDateTimeInMillis())
+                val alarmSetHour = hour.value!!
+                val alarmSetMinute = minute.value!!
+
+                // Here you must check whether the alarm is set between the designated range (05:00 ~ 10:59)
+                // If yes, then proceed with normal logic to activate alarm
+                // If not, then don't bother to activate the alarm, just display a Toast message -> "You suck!"
+                when {
+                    // Alarm is not in the designated time range
+                    alarmSetHour < 5 -> {
+                        newToast(res.getString(R.string.alarmSetBefore5))
+                        toggleBackOffEvent.value = SingleEvent(DEACTIVATE)
+                        isToggled = DEACTIVATE
                     }
-                        .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribeBy(
-                            onNext = { (_, newAlarmData) ->
-                                activateAlarm(newAlarmData)
-                                myAlarm = newAlarmData
-                            },
-                            onError = {}
-                        )
-                }
-                // Else if after noon, set to this time tomorrow
-                else {
-                    dateTimeUtil.add(Calendar.DAY_OF_MONTH, 1)
-                    subscription += Flowable.fromCallable {
-                        alarmDataRepo.toggleChange(
-                            myAlarm,
-                            changedToggleStatus,
-                            dateTimeUtil.getDateTimeInMillis())
+                    alarmSetHour >= 11 -> {
+                        newToast(res.getString(R.string.alarmSetAfter11))
+                        toggleBackOffEvent.value = SingleEvent(DEACTIVATE)
+                        isToggled = DEACTIVATE
                     }
-                        .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribeBy(
-                            onNext = { (_, newAlarmData) ->
-                                activateAlarm(newAlarmData)
-                                myAlarm = newAlarmData
-                            },
-                            onError = {}
+
+                    // Alarm is between the designated time (4:00 ~ 10:59) so activate it
+                    else -> {
+                        // Check to see what day the alarm should be set to -- today or tomorrow
+                        val rightNow = Calendar.getInstance()
+                        val dateTimeUtil = DateTimeUtilUnitsToMillis(
+                            year = rightNow.get(Calendar.YEAR),
+                            month = rightNow.get(Calendar.MONTH),
+                            dayOfMonth = rightNow.get(Calendar.DAY_OF_MONTH),
+                            hour = alarmSetHour,
+                            minute = alarmSetMinute
                         )
+
+                        // If before 11:00 am, then set to this time today
+                        if (rightNow.get(Calendar.HOUR_OF_DAY) < 11) {
+                            subscription += Flowable.fromCallable {
+                                alarmDataRepo.toggleChange(
+                                    myAlarm,
+                                    changedToggleStatus,
+                                    dateTimeUtil.getDateTimeInMillis()
+                                )
+                            }
+                                .subscribeOn(Schedulers.io())
+                                .observeOn(AndroidSchedulers.mainThread())
+                                .subscribeBy(
+                                    onNext = { (_, newAlarmData) ->
+                                        activateAlarm(newAlarmData)
+                                        myAlarm = newAlarmData
+                                    },
+                                    onError = {}
+                                )
+                        }
+                        // Else if after noon, set to this time tomorrow
+                        else {
+                            dateTimeUtil.add(Calendar.DAY_OF_MONTH, 1)
+                            subscription += Flowable.fromCallable {
+                                alarmDataRepo.toggleChange(
+                                    myAlarm,
+                                    changedToggleStatus,
+                                    dateTimeUtil.getDateTimeInMillis()
+                                )
+                            }
+                                .subscribeOn(Schedulers.io())
+                                .observeOn(AndroidSchedulers.mainThread())
+                                .subscribeBy(
+                                    onNext = { (_, newAlarmData) ->
+                                        activateAlarm(newAlarmData)
+                                        myAlarm = newAlarmData
+                                    },
+                                    onError = {}
+                                )
+                        }
+                    }
                 }
             }
             // Turned off, so update AlarmData with only changed isToggled value
@@ -241,7 +270,7 @@ class SingleAlarmViewModel : BaseViewModel() {
 
     private fun setTimeVisibility(activated: Boolean) {
         buildTimeString()
-        if(activated) {
+        if (activated) {
             timePickerVisibility.value = false
             timeTxtVwVisibility.value = true
         } else {
@@ -255,14 +284,14 @@ class SingleAlarmViewModel : BaseViewModel() {
         val ampm = if (hour.value!! < 12) R.string.am else R.string.pm
 
         val hour12 = with(hour.value!! % 12) {
-            when(this) {
+            when (this) {
                 0 -> 12
                 else -> this
             }
         }
 
-        val hourString = if(hour12 < 10) "0$hour12" else "$hour12"
-        val minuteString = if(minute.value!! < 10) "0${minute.value}" else "${minute.value}"
+        val hourString = if (hour12 < 10) "0$hour12" else "$hour12"
+        val minuteString = if (minute.value!! < 10) "0${minute.value}" else "${minute.value}"
         timeString.value = "$hourString:$minuteString"
         ampmString.value = res.getString(ampm)
     }
@@ -280,11 +309,13 @@ class SingleAlarmViewModel : BaseViewModel() {
     // View observes this to set the initial toggle state of ToggleButton
     fun observeInitialToggleSetEvent(): LiveData<SingleEvent<Triple<Boolean, Int, Int>>> = initialSetEvent
 
+    fun observeToggleBackOffEvent(): LiveData<SingleEvent<Boolean>> = toggleBackOffEvent
+
     // View observes this to get whether ToggleButton was toggled on or off
     fun observeActivateAlarmEvent(): LiveData<SingleEvent<Boolean>> = activateAlarmEvent
 
     fun onClickToggle(view: View) {
-        info("onClickToggle() triggered")
+        info("onClickToggle() -> hour: ${hour.value}, minute: ${minute.value}")
         val toggleButton = view as ToggleButton
         toggleChange(toggleButton.isChecked)
     }
