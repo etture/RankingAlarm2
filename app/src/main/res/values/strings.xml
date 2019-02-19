@@ -64,6 +64,8 @@
     <string name="alarmSetAfter11">- Can\'t set alarm -\nAre you lazy or what?</string>
     <string name="today">Today</string>
     <string name="tomorrow">Tomorrow</string>
+    <string name="alarmSet">Alarm has been set!</string>
+    <string name="alarmCleared">Alarm has been cleared</string>
 
 
     <!-- TODO: Remove or change this placeholder text -->

@@ -65,4 +65,6 @@
     <string name="alarmSetAfter11">- 알람 설정 불가 -\n백수야?</string>
     <string name="today">오늘</string>
     <string name="tomorrow">내일</string>
+    <string name="alarmSet">알람 설정 완료!</string>
+    <string name="alarmCleared">알람 해제</string>
 </resources>
