@@ -16,7 +16,7 @@
             android:layout_height="wrap_content"
             >
 
-        <android.support.constraint.ConstraintLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/alarmItem_constLayout_item"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -70,7 +70,7 @@
                     android:layout_marginEnd="8dp"
                     />
 
-            <android.support.v7.widget.SwitchCompat
+            <androidx.appcompat.widget.SwitchCompat
                     android:id="@+id/alarmItem_switch_toggle_placeholder"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -82,9 +82,9 @@
                     android:visibility="invisible"
                     />
 
-        </android.support.constraint.ConstraintLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <android.support.v7.widget.SwitchCompat
+        <androidx.appcompat.widget.SwitchCompat
                 android:id="@+id/alarmItem_switch_toggle"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"

@@ -1,6 +1,6 @@
 package com.ydly.rankingalarm2.data.local.alarm
 
-import android.arch.persistence.room.*
+import androidx.room.*
 import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
 

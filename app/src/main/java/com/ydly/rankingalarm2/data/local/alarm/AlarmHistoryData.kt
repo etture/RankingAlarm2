@@ -1,15 +1,15 @@
 package com.ydly.rankingalarm2.data.local.alarm
 
-import android.arch.persistence.room.ColumnInfo
-import android.arch.persistence.room.Entity
-import android.arch.persistence.room.Index
-import android.arch.persistence.room.PrimaryKey
+import androidx.room.ColumnInfo
+import androidx.room.Entity
+import androidx.room.Index
+import androidx.room.PrimaryKey
 import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize
 @Entity(
-    tableName = "rangTodayData",
+    tableName = "alarmHistoryData",
     indices = [Index(value = ["year", "month", "dayOfMonth"], unique = true)]
 )
 data class AlarmHistoryData(

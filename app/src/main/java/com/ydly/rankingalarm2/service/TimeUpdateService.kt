@@ -2,7 +2,7 @@ package com.ydly.rankingalarm2.service
 
 import android.content.Intent
 import android.os.IBinder
-import android.support.v4.content.LocalBroadcastManager
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.ydly.rankingalarm2.base.BaseService
 import com.ydly.rankingalarm2.data.repository.AlarmDataRepository
 import io.reactivex.disposables.CompositeDisposable

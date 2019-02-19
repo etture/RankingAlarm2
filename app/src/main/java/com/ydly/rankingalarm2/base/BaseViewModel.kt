@@ -1,6 +1,6 @@
 package com.ydly.rankingalarm2.base
 
-import android.arch.lifecycle.ViewModel
+import androidx.lifecycle.ViewModel
 import android.content.Intent
 import com.ydly.rankingalarm2.ui.alarm.*
 import com.ydly.rankingalarm2.util.ResourceProvider

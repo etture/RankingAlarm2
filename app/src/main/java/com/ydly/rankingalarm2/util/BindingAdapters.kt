@@ -1,10 +1,10 @@
 package com.ydly.rankingalarm2.util
 
-import android.arch.lifecycle.LiveData
-import android.arch.lifecycle.Observer
-import android.databinding.BindingAdapter
-import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.RecyclerView
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.Observer
+import androidx.databinding.BindingAdapter
+import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.RecyclerView
 import android.view.View
 import android.widget.TextView
 import com.ydly.rankingalarm2.util.extension.getParentActivity

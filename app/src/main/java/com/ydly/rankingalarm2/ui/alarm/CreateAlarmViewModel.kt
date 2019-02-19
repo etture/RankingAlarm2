@@ -1,8 +1,8 @@
 package com.ydly.rankingalarm2.ui.alarm
 
-import android.arch.lifecycle.LiveData
-import android.arch.lifecycle.MediatorLiveData
-import android.arch.lifecycle.MutableLiveData
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MediatorLiveData
+import androidx.lifecycle.MutableLiveData
 import android.view.View
 import com.ydly.rankingalarm2.R
 import com.ydly.rankingalarm2.base.BaseViewModel

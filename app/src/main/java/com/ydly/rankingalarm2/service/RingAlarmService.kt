@@ -7,7 +7,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.IBinder
-import android.support.v4.app.NotificationCompat
+import androidx.core.app.NotificationCompat
 import com.ydly.rankingalarm2.R
 import com.ydly.rankingalarm2.base.BaseService
 import com.ydly.rankingalarm2.ui.alarm.RingAlarmActivity

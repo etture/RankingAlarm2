@@ -1,8 +1,9 @@
 package com.ydly.rankingalarm2.injection.module
 
-import android.arch.persistence.room.Room
+import androidx.room.Room
 import android.content.Context
 import com.ydly.rankingalarm2.data.local.MIGRATION_1_2
+import com.ydly.rankingalarm2.data.local.MIGRATION_2_3
 import com.ydly.rankingalarm2.data.local.RankingAlarmDatabase
 import com.ydly.rankingalarm2.data.local.alarm.AlarmDataDao
 import com.ydly.rankingalarm2.injection.scope.RepositoryScope
@@ -21,7 +22,10 @@ class RoomModule {
             RankingAlarmDatabase::class.java,
             "rankingAlarm.db"
         )
-            .addMigrations(MIGRATION_1_2)
+            .addMigrations(
+                MIGRATION_1_2,
+                MIGRATION_2_3
+            )
             .build()
     }
 

@@ -3,18 +3,18 @@ package com.ydly.rankingalarm2.ui.alarm
 import android.annotation.TargetApi
 import android.app.AlarmManager
 import android.app.PendingIntent
-import android.arch.lifecycle.Observer
-import android.arch.lifecycle.ViewModelProviders
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
-import android.databinding.DataBindingUtil
+import androidx.databinding.DataBindingUtil
 import android.os.Build
 import android.os.Bundle
-import android.support.v4.content.LocalBroadcastManager
-import android.support.v7.widget.DividerItemDecoration
-import android.support.v7.widget.LinearLayoutManager
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -43,7 +43,11 @@ class AlarmFragment : BaseFragment() {
 
         // RecyclerView setup (adapter setup done via DataBinding in XML + BindingAdapter)
         binding.alarmFragRcyViewAlarmList.layoutManager =
-            LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
+            LinearLayoutManager(
+                activity,
+                LinearLayoutManager.VERTICAL,
+                false
+            )
         binding.alarmFragRcyViewAlarmList.addItemDecoration(
             DividerItemDecoration(
                 context,

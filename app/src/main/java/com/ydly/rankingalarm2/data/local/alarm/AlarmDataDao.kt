@@ -1,8 +1,8 @@
 package com.ydly.rankingalarm2.data.local.alarm
 
-import android.arch.persistence.room.*
-import android.arch.persistence.room.OnConflictStrategy.IGNORE
-import android.arch.persistence.room.OnConflictStrategy.REPLACE
+import androidx.room.*
+import androidx.room.OnConflictStrategy.IGNORE
+import androidx.room.OnConflictStrategy.REPLACE
 import io.reactivex.Flowable
 
 @Dao

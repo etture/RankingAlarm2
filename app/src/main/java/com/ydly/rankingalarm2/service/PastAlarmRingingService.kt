@@ -9,7 +9,7 @@ import android.content.Intent
 import android.media.MediaPlayer
 import android.os.Build
 import android.os.IBinder
-import android.support.v4.app.NotificationCompat
+import androidx.core.app.NotificationCompat
 import com.ydly.rankingalarm2.R
 import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.debug

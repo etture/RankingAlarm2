@@ -3,15 +3,15 @@ package com.ydly.rankingalarm2.util
 import android.content.Context
 import android.view.animation.AnimationUtils
 import android.view.animation.Animation
-import android.support.v4.content.res.ResourcesCompat
+import androidx.core.content.res.ResourcesCompat
 import android.content.res.Resources.NotFoundException
 import android.graphics.Typeface
-import android.support.v4.content.ContextCompat
+import androidx.core.content.ContextCompat
 import android.content.res.ColorStateList
 import android.content.res.Resources
 import android.graphics.drawable.Drawable
-import android.support.annotation.*
-import android.support.v4.content.res.TypedArrayUtils.getTextArray
+import androidx.annotation.*
+import androidx.core.content.res.TypedArrayUtils.getTextArray
 import javax.inject.Inject
 
 

@@ -1,7 +1,7 @@
 package com.ydly.rankingalarm2.base
 
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity
 import org.jetbrains.anko.AnkoLogger
 
 abstract class BaseActivity: AppCompatActivity(), AnkoLogger {

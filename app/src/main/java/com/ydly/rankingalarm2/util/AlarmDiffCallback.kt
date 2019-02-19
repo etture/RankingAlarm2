@@ -1,6 +1,6 @@
 package com.ydly.rankingalarm2.util
 
-import android.support.v7.util.DiffUtil
+import androidx.recyclerview.widget.DiffUtil
 import com.ydly.rankingalarm2.data.local.alarm.AlarmData
 
 class AlarmDiffCallback(
