@@ -110,7 +110,7 @@ class SingleAlarmFragment : BaseFragment() {
         super.onResume()
 
         // Update dateString in case the time has changed and should be reflected in the date
-        viewModel.updateDate()
+//        viewModel.updateDate()
 
         // Receive ACTION_TIME_TICK every minute
         // and start DateChangeService with the current timeInMillis

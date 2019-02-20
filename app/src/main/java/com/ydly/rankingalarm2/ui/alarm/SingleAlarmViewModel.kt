@@ -65,6 +65,37 @@ class SingleAlarmViewModel : BaseViewModel() {
         addSource(hour) { value ->
             setValue(value)
             info("hour changed: ${hour.value}")
+
+            // Logic to set targetDate to corresponding date every time time changes
+            val rightNow = Calendar.getInstance()
+            targetDate = DateTimeUtilMillisToUnits(rightNow.timeInMillis)
+
+            info("RightNow -> hour: ${rightNow.get(Calendar.HOUR_OF_DAY)}, minute: ${rightNow.get(Calendar.MINUTE)} / Target -> hour: ${hour.value}, minute: ${minute.value}")
+
+            when {
+                // Hour is later than now -> set to today
+                rightNow.get(Calendar.HOUR_OF_DAY) < hour.value!! -> {
+                    dateStringFinal(TODAY)
+                }
+                // Hour is equal to now
+                rightNow.get(Calendar.HOUR_OF_DAY) == hour.value!! -> {
+                    when {
+                        // Minute is later than now -> set to today
+                        rightNow.get(Calendar.MINUTE) < minute.value!! -> {
+                            dateStringFinal(TODAY)
+                        }
+                        // Minute is earlier than or equal to now -> set to tomorrow
+                        rightNow.get(Calendar.MINUTE) >= minute.value!! -> {
+                            dateStringFinal(TOMORROW)
+                        }
+                    }
+                }
+                // Hour is earlier than now -> set to tomorrow
+                rightNow.get(Calendar.HOUR_OF_DAY) > hour.value!! -> {
+                    dateStringFinal(TOMORROW)
+                }
+            }
+
         }
     }.also { it.observeForever { /*Do nothing*/ } }
 
@@ -73,6 +104,37 @@ class SingleAlarmViewModel : BaseViewModel() {
         addSource(minute) { value ->
             setValue(value)
             info("minute changed: ${minute.value}")
+
+            // Logic to set targetDate to corresponding date every time time changes
+            val rightNow = Calendar.getInstance()
+            targetDate = DateTimeUtilMillisToUnits(rightNow.timeInMillis)
+
+            info("RightNow -> hour: ${rightNow.get(Calendar.HOUR_OF_DAY)}, minute: ${rightNow.get(Calendar.MINUTE)} / Target -> hour: ${hour.value}, minute: ${minute.value}")
+
+            when {
+                // Hour is later than now -> set to today
+                rightNow.get(Calendar.HOUR_OF_DAY) < hour.value!! -> {
+                    dateStringFinal(TODAY)
+                }
+                // Hour is equal to now
+                rightNow.get(Calendar.HOUR_OF_DAY) == hour.value!! -> {
+                    when {
+                        // Minute is later than now -> set to today
+                        rightNow.get(Calendar.MINUTE) < minute.value!! -> {
+                            dateStringFinal(TODAY)
+                        }
+                        // Minute is earlier than or equal to now -> set to tomorrow
+                        rightNow.get(Calendar.MINUTE) >= minute.value!! -> {
+                            dateStringFinal(TOMORROW)
+                        }
+                    }
+                }
+                // Hour is earlier than now -> set to tomorrow
+                rightNow.get(Calendar.HOUR_OF_DAY) > hour.value!! -> {
+                    dateStringFinal(TOMORROW)
+                }
+            }
+
         }
     }.also { it.observeForever { /*Do nothing*/ } }
 
@@ -83,7 +145,6 @@ class SingleAlarmViewModel : BaseViewModel() {
     init {
         info("Values before initialization: hour: ${hour.value}, minute: ${minute.value}, isToggled: $isToggled")
         initAlarmItem()
-        setTargetDate()
         info("Values after initialization: hour: ${hour.value}, minute: ${minute.value}, isToggled: $isToggled")
     }
 
@@ -104,7 +165,8 @@ class SingleAlarmViewModel : BaseViewModel() {
                         initDisplayedElements()
                         info("initAlarmItem() -> myAlarm: $myAlarm")
                     }
-                }
+                },
+                onComplete = { setTargetDate() }
             )
 
     }
@@ -113,7 +175,7 @@ class SingleAlarmViewModel : BaseViewModel() {
     private fun initDB() {
 
         val calendar = Calendar.getInstance()
-        calendar.set(Calendar.HOUR_OF_DAY, 7)
+        calendar.set(Calendar.HOUR_OF_DAY, 6)
         calendar.set(Calendar.MINUTE, 0)
         calendar.set(Calendar.SECOND, 0)
         calendar.set(Calendar.MILLISECOND, 0)
@@ -265,26 +327,29 @@ class SingleAlarmViewModel : BaseViewModel() {
         targetDate = DateTimeUtilMillisToUnits(rightNow.timeInMillis)
 
         when {
-            // If the time is before 5 a.m., then the alarm should be set to today
-            rightNow.get(Calendar.HOUR_OF_DAY) < 5 -> {
-                todayTmrwString.value = res.getString(R.string.today)
+            // Hour is later than now -> set to today
+            rightNow.get(Calendar.HOUR_OF_DAY) < hour.value!! -> {
+                dateStringFinal(TODAY)
             }
-            // If the time is at or after 11 a.m., then the alarm should be set to tomorrow
-            rightNow.get(Calendar.HOUR_OF_DAY) >= 11 -> {
-                targetDate.add(Calendar.DAY_OF_MONTH, 1)
-                todayTmrwString.value = res.getString(R.string.tomorrow)
+            // Hour is equal to now
+            rightNow.get(Calendar.HOUR_OF_DAY) == hour.value!! -> {
+                when {
+                    // Minute is later than now -> set to today
+                    rightNow.get(Calendar.MINUTE) < minute.value!! -> {
+                        dateStringFinal(TODAY)
+                    }
+                    // Minute is earlier than or equal to now -> set to tomorrow
+                    rightNow.get(Calendar.MINUTE) >= minute.value!! -> {
+                        dateStringFinal(TOMORROW)
+                    }
+                }
             }
-            // Otherwise, if the alarm rang today, then the alarm should be set to tomorrow
-            // And if it hasn't rung yet today, then it should be set to today
-            else -> {
-                /// TEMPORARY!!!!
-                // For now, TEMPORARILY just set it to tomorrow
-                targetDate.add(Calendar.DAY_OF_MONTH, 1)
-                todayTmrwString.value = res.getString(R.string.tomorrow)
-                /// TEMPORARY!!!!
+            // Hour is earlier than now -> set to tomorrow
+            rightNow.get(Calendar.HOUR_OF_DAY) > hour.value!! -> {
+                dateStringFinal(TOMORROW)
             }
         }
-        buildDateTodayTmrwString()
+
     }
 
     private fun buildDateTodayTmrwString() {
@@ -344,6 +409,20 @@ class SingleAlarmViewModel : BaseViewModel() {
         val minuteString = if (minute.value!! < 10) "0${minute.value}" else "${minute.value}"
         timeString.value = "$hourString:$minuteString"
         ampmString.value = res.getString(ampm)
+    }
+
+    private fun dateStringFinal(todayTomorrowCode: Int) {
+        when (todayTomorrowCode) {
+            TODAY -> {
+                todayTmrwString.value = res.getString(R.string.today)
+                buildDateTodayTmrwString()
+            }
+            TOMORROW -> {
+                targetDate.add(Calendar.DAY_OF_MONTH, 1)
+                todayTmrwString.value = res.getString(R.string.tomorrow)
+                buildDateTodayTmrwString()
+            }
+        }
     }
 
     private fun newToast(str: String) {

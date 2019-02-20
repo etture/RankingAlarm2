@@ -14,3 +14,7 @@ const val NO_CHANGE_ALARM = 55
 // Used in SingleAlarmViewModel to denote whether alarm was activated or deactivated
 const val ACTIVATE = true
 const val DEACTIVATE = false
+
+// Used in SingleAlarmViewModel to denote whether date is being set to today or tomorrow
+const val TODAY = 61
+const val TOMORROW = 53
