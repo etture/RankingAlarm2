@@ -2,7 +2,7 @@ package com.ydly.rankingalarm2.injection.module
 
 import android.app.AlarmManager
 import android.content.Context
-import com.ydly.rankingalarm2.receiver.MinuteTickReceiver
+import com.ydly.rankingalarm2.receiver.DateChangeReceiver
 import dagger.Module
 import dagger.Provides
 
@@ -17,6 +17,6 @@ class AppModule(private val context: Context) {
     fun provideAlarmManager(ctx: Context): AlarmManager  = ctx.getSystemService(Context.ALARM_SERVICE) as AlarmManager
 
     @Provides
-    fun provideMinuteTickReceiver(): MinuteTickReceiver = MinuteTickReceiver()
+    fun provideDateChangeReceiver(): DateChangeReceiver = DateChangeReceiver()
 
 }

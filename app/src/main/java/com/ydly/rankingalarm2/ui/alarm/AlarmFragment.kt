@@ -191,17 +191,17 @@ class AlarmFragment : BaseFragment() {
         super.onResume()
         info("onResume() called")
 
-        // Since the alarm list may have changed through TimeUpdateService while
+        // Since the alarm list may have changed through DateChangeService while
         // the Activity was off-screen, refresh the list at onResume()
         viewModel.refreshAlarmList()
 
         // Receive ACTION_TIME_TICK every minute
-        // and start TimeUpdateService with the current timeInMillis
+        // and start DateChangeService with the current timeInMillis
         // Registering receiver programmatically because Intent.ACTION_TIME_TICK cannot be registered via Manifest
         val timeTickIntentFilter = IntentFilter(Intent.ACTION_TIME_TICK)
         activity?.registerReceiver(minuteTickReceiver, timeTickIntentFilter)
 
-        // Receive broadcast from TimeUpdateService that dates were changed on some items
+        // Receive broadcast from DateChangeService that dates were changed on some items
         // and refresh the alarm list
         dateUpdatedToNextReceiver = object : BroadcastReceiver() {
             override fun onReceive(context: Context?, intent: Intent?) {

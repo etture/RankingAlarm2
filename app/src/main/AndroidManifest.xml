@@ -41,8 +41,17 @@
                 android:exported="false">
         </receiver>
 
+        <receiver
+                android:name=".receiver.DateChangeReceiver"
+                android:enabled="true"
+                >
+            <intent-filter>
+                <action android:name="android.intent.action.DATE_CHANGED" />
+            </intent-filter>
+        </receiver>
+
         <service
-                android:name=".service.TimeUpdateService"
+                android:name=".service.DateChangeService"
                 android:enabled="true"
                 android:exported="false">
         </service>

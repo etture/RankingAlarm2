@@ -7,7 +7,6 @@ import com.ydly.rankingalarm2.injection.component.RepositoryInjector
 import com.ydly.rankingalarm2.injection.component.ServiceInjector
 import com.ydly.rankingalarm2.injection.component.ViewInjector
 import com.ydly.rankingalarm2.injection.component.ViewModelInjector
-import com.ydly.rankingalarm2.util.ResourceProvider
 import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.info
 

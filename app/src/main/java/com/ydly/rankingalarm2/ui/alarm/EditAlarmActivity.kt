@@ -9,7 +9,6 @@ import android.os.Bundle
 import android.widget.Toast
 import com.ydly.rankingalarm2.R
 import com.ydly.rankingalarm2.base.BaseActivity
-import com.ydly.rankingalarm2.data.local.alarm.AlarmData
 import com.ydly.rankingalarm2.util.DELETE_ALARM
 import com.ydly.rankingalarm2.util.DateTimeUtilUnitsToMillis
 import com.ydly.rankingalarm2.util.EDIT_ALARM

@@ -1,7 +1,7 @@
 package com.ydly.rankingalarm2.base
 
 import android.app.Service
-import com.ydly.rankingalarm2.service.TimeUpdateService
+import com.ydly.rankingalarm2.service.DateChangeService
 import com.ydly.rankingalarm2.util.ResourceProvider
 import org.jetbrains.anko.AnkoLogger
 import javax.inject.Inject
@@ -19,7 +19,7 @@ abstract class BaseService : Service(), AnkoLogger {
 
     private fun inject() {
         when (this) {
-            is TimeUpdateService -> injector?.inject(this)
+            is DateChangeService -> injector?.inject(this)
         }
     }
 

@@ -6,6 +6,7 @@ import com.ydly.rankingalarm2.data.local.MIGRATION_1_2
 import com.ydly.rankingalarm2.data.local.MIGRATION_2_3
 import com.ydly.rankingalarm2.data.local.RankingAlarmDatabase
 import com.ydly.rankingalarm2.data.local.alarm.AlarmDataDao
+import com.ydly.rankingalarm2.data.local.alarm.AlarmHistoryDao
 import com.ydly.rankingalarm2.injection.scope.RepositoryScope
 import dagger.Module
 import dagger.Provides
@@ -33,6 +34,12 @@ class RoomModule {
     @RepositoryScope
     fun provideAlarmDataDao(rankingAlarmDatabase: RankingAlarmDatabase): AlarmDataDao {
         return rankingAlarmDatabase.alarmDataDao()
+    }
+
+    @Provides
+    @RepositoryScope
+    fun provideAlarmHistoryDao(rankingAlarmDatabase: RankingAlarmDatabase): AlarmHistoryDao {
+        return rankingAlarmDatabase.alarmHistoryDao()
     }
 
 }

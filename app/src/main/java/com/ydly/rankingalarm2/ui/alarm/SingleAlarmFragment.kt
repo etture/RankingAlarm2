@@ -113,7 +113,7 @@ class SingleAlarmFragment : BaseFragment() {
         viewModel.updateDate()
 
         // Receive ACTION_TIME_TICK every minute
-        // and start TimeUpdateService with the current timeInMillis
+        // and start DateChangeService with the current timeInMillis
         // Registering receiver programmatically because Intent.ACTION_TIME_TICK cannot be registered via Manifest
         timeTickReceiver = object : BroadcastReceiver() {
             override fun onReceive(context: Context?, intent: Intent?) {
@@ -125,7 +125,7 @@ class SingleAlarmFragment : BaseFragment() {
                     val minute = calendar.get(Calendar.MINUTE)
                     info("Minute ticked, hour: $hour, minute: $minute")
 
-                    // 3 times when TimeUpdateService should be called
+                    // 3 times when DateChangeService should be called
                     // At 05:00, 11:00, and 00:00
                     if ((minute == 0) && (hour == 5 || hour == 11 || hour == 0)) {
                         viewModel.updateDate()
