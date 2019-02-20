@@ -19,6 +19,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.app.AlarmManagerCompat
+import androidx.recyclerview.widget.RecyclerView
 import com.ydly.rankingalarm2.R
 import com.ydly.rankingalarm2.base.BaseFragment
 import com.ydly.rankingalarm2.receiver.AlarmReceiver
@@ -33,8 +35,6 @@ class AlarmFragment : BaseFragment() {
 
     private lateinit var dateUpdatedToNextReceiver: BroadcastReceiver
 
-    private val alarmManagerWrapper = AlarmManagerWrapper(alarmManager)
-
     override fun bind(inflater: LayoutInflater, container: ViewGroup?) {
         // ViewModel and DataBinding setup
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_alarm, container, false)
@@ -45,7 +45,7 @@ class AlarmFragment : BaseFragment() {
         binding.alarmFragRcyViewAlarmList.layoutManager =
             LinearLayoutManager(
                 activity,
-                LinearLayoutManager.VERTICAL,
+                RecyclerView.VERTICAL,
                 false
             )
         binding.alarmFragRcyViewAlarmList.addItemDecoration(
@@ -121,21 +121,8 @@ class AlarmFragment : BaseFragment() {
 
                 // Set AlarmManager with PendingIntent at the specified time
                 // For exact time-setting, vary functions based on API version
-                with(Build.VERSION.SDK_INT) {
-                    when {
-                        this >= Build.VERSION_CODES.M -> {
-                            alarmManagerWrapper.setExactAndAllowWhileIdle(
-                                AlarmManager.RTC_WAKEUP, alarmTime, pendingIntent
-                            )
-                        }
-                        this >= Build.VERSION_CODES.LOLLIPOP -> {
-                            alarmManager.setExact(AlarmManager.RTC_WAKEUP, alarmTime, pendingIntent)
-                        }
-                        else -> {
-                            alarmManager.set(AlarmManager.RTC_WAKEUP, alarmTime, pendingIntent)
-                        }
-                    }
-                }
+                // AlarmManagerCompat takes care of API versions
+                AlarmManagerCompat.setExactAndAllowWhileIdle(alarmManager, AlarmManager.RTC_WAKEUP, alarmTime, pendingIntent)
 
             }
         })
@@ -167,14 +154,6 @@ class AlarmFragment : BaseFragment() {
         })
 
         return binding.root
-    }
-
-    // AlarmManger wrapper class to use @TargetApi annotation
-    internal class AlarmManagerWrapper(private val alarmManager: AlarmManager) {
-        @TargetApi(23)
-        fun setExactAndAllowWhileIdle(type: Int, triggerAtMillis: Long, operation: PendingIntent) {
-            alarmManager.setExactAndAllowWhileIdle(type, triggerAtMillis, operation)
-        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

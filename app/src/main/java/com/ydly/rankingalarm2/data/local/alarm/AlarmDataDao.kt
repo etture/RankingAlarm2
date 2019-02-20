@@ -9,7 +9,7 @@ import io.reactivex.Flowable
 interface AlarmDataDao {
 
     @Query("SELECT * FROM alarmData")
-    fun getAll(): Flowable<List<AlarmData>>
+    fun getAll(): List<AlarmData>
 
     @Insert(onConflict = IGNORE)
     fun insert(alarmData: AlarmData): Long

@@ -16,12 +16,12 @@ class AlarmDataRepository : BaseRepository() {
         info(alarmDataDao.toString())
     }
 
-    private fun _getAlarms(): Flowable<List<AlarmData>> {
+    private fun _getAlarms(): List<AlarmData> {
         return alarmDataDao.getAll()
     }
 
-    private fun _insertNewAlarm(timeInMillis: Long): AlarmData {
-        val alarmData = AlarmData(timeInMillis = timeInMillis, isToggledOn = true)
+    private fun _insertNewAlarm(timeInMillis: Long, isToggledOn: Boolean): AlarmData {
+        val alarmData = AlarmData(timeInMillis = timeInMillis, isToggledOn = isToggledOn)
         // If new item, then insertId and if existing, then -1
         val insertId: Long = alarmDataDao.insert(alarmData)
         info("Alarm Set: $alarmData, insertId: $insertId")
@@ -81,13 +81,13 @@ class AlarmDataRepository : BaseRepository() {
 
     //========= Functions accessible by ViewModel ==========
 
-    fun getAlarms(): Flowable<List<AlarmData>> {
+    fun getAlarms(): List<AlarmData> {
         return _getAlarms()
     }
 
     // Return the newly added AlarmData object
-    fun insertNewAlarm(timeInMillis: Long): AlarmData {
-        return _insertNewAlarm(timeInMillis)
+    fun insertNewAlarm(timeInMillis: Long, isToggledOn: Boolean = true): AlarmData {
+        return _insertNewAlarm(timeInMillis, isToggledOn)
     }
 
     // Return the updated AlarmData object

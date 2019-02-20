@@ -110,7 +110,7 @@ class AlarmViewModel : BaseViewModel() {
 
     private fun initAlarmList() {
 
-        subscription += alarmDataRepo.getAlarms()
+        subscription += Flowable.fromCallable { alarmDataRepo.getAlarms() }
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeBy(
@@ -125,7 +125,7 @@ class AlarmViewModel : BaseViewModel() {
 
     private fun _refreshAlarmList() {
 
-        subscription += alarmDataRepo.getAlarms()
+        subscription += Flowable.fromCallable { alarmDataRepo.getAlarms() }
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeBy(

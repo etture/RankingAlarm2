@@ -6,8 +6,10 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.ydly.rankingalarm2.receiver.DateChangeReceiver
 import com.ydly.rankingalarm2.ui.alarm.AlarmFragment
+import com.ydly.rankingalarm2.ui.alarm.SingleAlarmFragment
 import io.reactivex.disposables.CompositeDisposable
 import org.jetbrains.anko.AnkoLogger
+import org.jetbrains.anko.info
 import javax.inject.Inject
 
 abstract class BaseFragment: Fragment(), AnkoLogger {
@@ -24,11 +26,13 @@ abstract class BaseFragment: Fragment(), AnkoLogger {
 
     init {
         inject()
+        info("init -> alarmManager: $alarmManager")
     }
 
     private fun inject() {
         when(this) {
             is AlarmFragment -> injector?.inject(this)
+            is SingleAlarmFragment -> injector?.inject(this)
         }
     }
 
