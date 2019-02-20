@@ -28,6 +28,7 @@ abstract class BaseViewModel : ViewModel(), AnkoLogger {
             is CreateAlarmViewModel -> injector?.inject(this)
             is EditAlarmViewModel -> injector?.inject(this)
             is SingleAlarmViewModel -> injector?.inject(this)
+            is RingAlarmViewModel -> injector?.inject(this)
         }
     }
 

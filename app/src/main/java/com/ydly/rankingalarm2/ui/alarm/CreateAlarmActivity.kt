@@ -18,7 +18,7 @@ class CreateAlarmActivity : BaseActivity() {
     private lateinit var viewModel: CreateAlarmViewModel
     private lateinit var binding: com.ydly.rankingalarm2.databinding.ActivityCreateAlarmBinding
 
-    override fun bind() {
+    override fun initialize() {
         // ViewModel and DataBinding setup
         binding = DataBindingUtil.setContentView(this, R.layout.activity_create_alarm)
         viewModel = ViewModelProviders.of(this).get(CreateAlarmViewModel::class.java)

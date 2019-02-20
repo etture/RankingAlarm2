@@ -8,9 +8,9 @@ abstract class BaseActivity: AppCompatActivity(), AnkoLogger {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        bind()
+        initialize()
     }
 
-    abstract fun bind()
+    abstract fun initialize()
 
 }

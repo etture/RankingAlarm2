@@ -20,7 +20,7 @@ class EditAlarmActivity : BaseActivity() {
     private lateinit var binding: com.ydly.rankingalarm2.databinding.ActivityEditAlarmBinding
     private lateinit var viewModel: EditAlarmViewModel
 
-    override fun bind() {
+    override fun initialize() {
         // ViewModel and DataBinding setup (called at onCreate())
         binding = DataBindingUtil.setContentView(this, R.layout.activity_edit_alarm)
         viewModel = ViewModelProviders.of(this).get(EditAlarmViewModel::class.java)

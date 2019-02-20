@@ -389,6 +389,9 @@ class SingleAlarmViewModel : BaseViewModel() {
         setTargetDate()
     }
 
+    fun clearSubscription() {
+        subscription.clear()
+    }
 
     //========= Functions accessible by View (DataBinding) ==========
 

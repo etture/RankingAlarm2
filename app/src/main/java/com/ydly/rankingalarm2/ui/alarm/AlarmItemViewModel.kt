@@ -108,7 +108,7 @@ class AlarmItemViewModel : BaseViewModel() {
 
     fun bind(alarmData: AlarmData, listener: AlarmListAdapter.AlarmItemListener) {
 
-        info("bind() called, ${alarmData.timeInMillis}")
+        info("initialize() called, ${alarmData.timeInMillis}")
 
         // Initialize DateTimeUtil with milliseconds value from AlarmData object
         val dateTimeUtil = DateTimeUtilMillisToUnits(alarmData.timeInMillis)
@@ -127,7 +127,7 @@ class AlarmItemViewModel : BaseViewModel() {
 
         // Bind isToggledOn state
         this.isToggledOn.value = alarmData.isToggledOn
-        info("bind() -> id: ${alarmData.id} initial isToggledOn: ${alarmData.isToggledOn}")
+        info("initialize() -> id: ${alarmData.id} initial isToggledOn: ${alarmData.isToggledOn}")
 
         this.alarmData = alarmData
         alarmItemListener = listener

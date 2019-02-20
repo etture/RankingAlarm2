@@ -5,10 +5,7 @@ import android.app.AlarmManager
 import android.app.PendingIntent
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
-import android.content.BroadcastReceiver
-import android.content.Context
 import android.content.Intent
-import android.content.IntentFilter
 import androidx.databinding.DataBindingUtil
 import android.os.Build
 import android.os.Bundle
@@ -25,7 +22,6 @@ import com.ydly.rankingalarm2.data.local.alarm.AlarmData
 import com.ydly.rankingalarm2.receiver.AlarmReceiver
 import com.ydly.rankingalarm2.util.SingleEvent
 import org.jetbrains.anko.info
-import java.util.*
 
 class SingleAlarmFragment : BaseFragment() {
 
@@ -33,9 +29,7 @@ class SingleAlarmFragment : BaseFragment() {
         fun newInstance() = SingleAlarmFragment()
     }
 
-    private val viewModel: SingleAlarmViewModel by lazy {
-        ViewModelProviders.of(activity!!).get(SingleAlarmViewModel::class.java)
-    }
+    private val viewModel: SingleAlarmViewModel by lazy { ViewModelProviders.of(activity!!).get(SingleAlarmViewModel::class.java) }
     private lateinit var binding: com.ydly.rankingalarm2.databinding.FragmentSingleAlarmBinding
 
     private lateinit var newToastObserver: Observer<SingleEvent<String>>
@@ -45,7 +39,7 @@ class SingleAlarmFragment : BaseFragment() {
     private lateinit var activateEventObserver: Observer<SingleEvent<AlarmData>>
     private lateinit var deactivateEventObserver: Observer<SingleEvent<AlarmData>>
 
-    override fun bind(inflater: LayoutInflater, container: ViewGroup?) {
+    override fun initialize(inflater: LayoutInflater, container: ViewGroup?) {
         // ViewModel and DataBinding setup
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_single_alarm, container, false)
         binding.viewModel = viewModel
@@ -57,7 +51,7 @@ class SingleAlarmFragment : BaseFragment() {
         savedInstanceState: Bundle?
     ): View? {
 
-        bind(inflater, container)
+        initialize(inflater, container)
         info("onCreateView()")
 
         return binding.root
@@ -81,6 +75,8 @@ class SingleAlarmFragment : BaseFragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         info("onDestroyView()")
+
+        viewModel.clearSubscription()
     }
 
     override fun onResume() {
@@ -137,6 +133,7 @@ class SingleAlarmFragment : BaseFragment() {
 
                 val activateAlarmIntent = Intent(activity, AlarmReceiver::class.java)
                 activateAlarmIntent.putExtra("message", alarmData.toString())
+                activateAlarmIntent.putExtra("alarmData", alarmData)
 
                 // PendingIntent to send broadcast to AlarmReceiver at specified time
                 // Use timeInMillis as 2nd parameter (requestCode),
@@ -198,6 +195,7 @@ class SingleAlarmFragment : BaseFragment() {
             it.observeToggleBackOffEvent().observe(activity!!, toggleBackOffEventObserver)
             it.observeActivateEvent().observe(activity!!, activateEventObserver)
             it.observeDeactivateEvent().observe(activity!!, deactivateEventObserver)
+
         }
     }
 

@@ -1,6 +1,5 @@
 package com.ydly.rankingalarm2.ui.alarm
 
-import android.annotation.TargetApi
 import android.app.AlarmManager
 import android.app.PendingIntent
 import androidx.lifecycle.Observer
@@ -10,7 +9,6 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import androidx.databinding.DataBindingUtil
-import android.os.Build
 import android.os.Bundle
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -35,7 +33,7 @@ class AlarmFragment : BaseFragment() {
 
     private lateinit var dateUpdatedToNextReceiver: BroadcastReceiver
 
-    override fun bind(inflater: LayoutInflater, container: ViewGroup?) {
+    override fun initialize(inflater: LayoutInflater, container: ViewGroup?) {
         // ViewModel and DataBinding setup
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_alarm, container, false)
         viewModel = ViewModelProviders.of(this).get(AlarmViewModel::class.java)
@@ -62,7 +60,7 @@ class AlarmFragment : BaseFragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        bind(inflater, container)
+        initialize(inflater, container)
         info("onCreateView() called")
 
         // Observe function in ViewModel to get onClick events from Views

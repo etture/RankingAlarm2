@@ -26,7 +26,7 @@ abstract class BaseFragment: Fragment(), AnkoLogger {
 
     init {
         inject()
-        info("init -> alarmManager: $alarmManager")
+        info("initialize -> alarmManager: $alarmManager")
     }
 
     private fun inject() {
@@ -36,6 +36,6 @@ abstract class BaseFragment: Fragment(), AnkoLogger {
         }
     }
 
-    abstract fun bind(inflater: LayoutInflater, container: ViewGroup?)
+    abstract fun initialize(inflater: LayoutInflater, container: ViewGroup?)
 
 }

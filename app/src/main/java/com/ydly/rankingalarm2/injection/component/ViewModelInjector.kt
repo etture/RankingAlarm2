@@ -16,6 +16,7 @@ interface ViewModelInjector {
     fun inject(createAlarmViewModel: CreateAlarmViewModel)
     fun inject(editAlarmViewModel: EditAlarmViewModel)
     fun inject(singleAlarmViewModel: SingleAlarmViewModel)
+    fun inject(ringAlarmViewModel: RingAlarmViewModel)
 
     @Component.Builder
     interface Builder {
