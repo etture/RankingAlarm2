@@ -30,7 +30,6 @@ class RingAlarmActivity : BaseActivity() {
     @SuppressLint("ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_ring_alarm)
 
         binding.redBtn.setOnTouchListener { view, motionEvent ->
             val redBtn = view as ImageView

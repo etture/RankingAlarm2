@@ -57,32 +57,11 @@ class SingleAlarmFragment : BaseFragment() {
         return binding.root
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        info("onCreate()")
-    }
-
-    override fun onStart() {
-        super.onStart()
-        info("onStart()")
-    }
-
-    override fun onStop() {
-        super.onStop()
-        info("onStop()")
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        info("onDestroyView()")
-
-        viewModel.clearSubscription()
-    }
-
     override fun onResume() {
         super.onResume()
 
         info("onResume()")
+        viewModel.updateDate()
 
         // Observe function in ViewModel to get a new Toast message and display it
         newToastObserver = Observer {
@@ -212,5 +191,17 @@ class SingleAlarmFragment : BaseFragment() {
             observeDeactivateEvent().removeObserver(deactivateEventObserver)
         }
 
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        info("onDestroyView()")
+
+        viewModel.clearSubscription()
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        viewModel.onActivityResult(requestCode, resultCode, data)
     }
 }

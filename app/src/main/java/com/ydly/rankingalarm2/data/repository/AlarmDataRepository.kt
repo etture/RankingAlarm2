@@ -20,6 +20,10 @@ class AlarmDataRepository : BaseRepository() {
         return alarmDataDao.getAll()
     }
 
+    private fun _getAlarmsFlowable(): Flowable<List<AlarmData>> {
+        return alarmDataDao.getAllFlowable()
+    }
+
     private fun _insertNewAlarm(timeInMillis: Long, isToggledOn: Boolean): AlarmData {
         val alarmData = AlarmData(timeInMillis = timeInMillis, isToggledOn = isToggledOn)
         // If new item, then insertId and if existing, then -1
@@ -83,6 +87,10 @@ class AlarmDataRepository : BaseRepository() {
 
     fun getAlarms(): List<AlarmData> {
         return _getAlarms()
+    }
+
+    fun getAlarmsFlowable(): Flowable<List<AlarmData>> {
+        return _getAlarmsFlowable()
     }
 
     // Return the newly added AlarmData object

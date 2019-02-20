@@ -11,6 +11,9 @@ interface AlarmDataDao {
     @Query("SELECT * FROM alarmData")
     fun getAll(): List<AlarmData>
 
+    @Query("SELECT * FROM alarmData")
+    fun getAllFlowable(): Flowable<List<AlarmData>>
+
     @Insert(onConflict = IGNORE)
     fun insert(alarmData: AlarmData): Long
 

@@ -1,5 +1,6 @@
 package com.ydly.rankingalarm2.ui.alarm
 
+import android.content.Intent
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
@@ -98,7 +99,7 @@ class SingleAlarmViewModel : BaseViewModel() {
 
         info("initAlarmItem() called")
 
-        subscription += Flowable.fromCallable { alarmDataRepo.getAlarms() }
+        subscription += alarmDataRepo.getAlarmsFlowable()
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeBy(
@@ -376,12 +377,21 @@ class SingleAlarmViewModel : BaseViewModel() {
 
     // View observes this to get whether ToggleButton was toggled on or off
     fun observeActivateEvent(): LiveData<SingleEvent<AlarmData>> = activateEvent
+
     fun observeDeactivateEvent(): LiveData<SingleEvent<AlarmData>> = deactivateEvent
 
     fun onClickToggle(view: View) {
         info("onClickToggle() -> hour: ${hour.value}, minute: ${minute.value}")
         val toggleButton = view as ToggleButton
         toggleChange(toggleButton.isChecked)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+
+        when (requestCode) {
+
+        }
+
     }
 
     // Update the dateString showing the date, called on onResume()
