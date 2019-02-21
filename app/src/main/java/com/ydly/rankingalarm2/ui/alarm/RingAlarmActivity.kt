@@ -16,6 +16,8 @@ import androidx.lifecycle.ViewModelProviders
 import com.ydly.rankingalarm2.R
 import com.ydly.rankingalarm2.base.BaseActivity
 import com.ydly.rankingalarm2.data.local.alarm.AlarmData
+import com.ydly.rankingalarm2.util.SLEPT_IN
+import com.ydly.rankingalarm2.util.WOKE_UP
 
 class RingAlarmActivity : BaseActivity() {
 
@@ -31,13 +33,16 @@ class RingAlarmActivity : BaseActivity() {
         this.loggerTag)
     }
 
+    // Receiver for getting screen-off action
     private lateinit var screenStatusReceiver: BroadcastReceiver
 
-    private val startTime = System.currentTimeMillis()
+    // Stopwatch to start as soon as Activity launches
+    private val startTime: Long = System.currentTimeMillis()
+    private var elapsedTime: Long = 0L
     private val handler = Handler()
     private val stopwatch = object : Runnable {
         override fun run() {
-            val elapsedTime = System.currentTimeMillis() - startTime
+            elapsedTime = System.currentTimeMillis() - startTime
             viewModel.updateTimeInMillis(elapsedTime)
             handler.postDelayed(this, 10)
         }
@@ -60,14 +65,16 @@ class RingAlarmActivity : BaseActivity() {
         binding.viewModel = viewModel
 
         val alarmData = intent.getParcelableExtra<AlarmData>("alarmData")
-        viewModel.untoggle(alarmData)
+
+        // Register alarmData to ViewModel and untoggle the alarm via DB
+        viewModel.registerAlarmData(alarmData)
     }
 
     @SuppressLint("ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // Acquire WakeLock for 5 minutes max
+        // Acquire WakeLock for 5 minutes max -> after 5 mins, automatically releases WakeLock
         wl.acquire(300000)
 
         binding.redBtn.setOnTouchListener { view, motionEvent ->
@@ -76,6 +83,10 @@ class RingAlarmActivity : BaseActivity() {
                 MotionEvent.ACTION_DOWN -> {
                     redBtn.setImageResource(R.drawable.red_btn_pressed_medium)
                     handler.removeCallbacks(stopwatch)
+
+                    // Insert new AlarmHistoryData with elapsedTime and WOKE_UP status
+                    viewModel.setNewAlarmHistory(WOKE_UP, elapsedTime)
+
                     releaseWakeLock()
                     finish()
                     true
@@ -94,6 +105,9 @@ class RingAlarmActivity : BaseActivity() {
                 val action = intent?.action
                 when(action) {
                     Intent.ACTION_SCREEN_OFF -> {
+                        // Insert new AlarmHistoryData with elapsedTime and SLEPT_IN status
+                        viewModel.setNewAlarmHistory(SLEPT_IN)
+
                         releaseWakeLock()
                         finish()
                     }

@@ -34,16 +34,6 @@ class DateChangeService : BaseService() {
         val month = calendar.get(Calendar.MONTH)
         val day = calendar.get(Calendar.DAY_OF_MONTH)
 
-        compositeDisposable += Flowable.fromCallable { alarmHistoryRepo.newDay(year, month, day) }
-            .observeOn(Schedulers.io())
-            .subscribeOn(AndroidSchedulers.mainThread())
-            .subscribeBy(
-                onNext = { newDayData ->
-                    info("New day created, AlarmHistoryData inserted: $newDayData")
-                },
-                onError = { error -> info(error) }
-            )
-
         return START_NOT_STICKY
     }
 

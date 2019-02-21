@@ -65,12 +65,13 @@ class BaseApplication: Application(), AnkoLogger {
     }
 
     private fun setUUID() {
-        val prefs = getSharedPreferences("mainPrefs", Context.MODE_PRIVATE)
         // If the uuid is not present, then it means first-time installation
         // Set a UUID that can be used to identify the device from the server
+        val prefs = getSharedPreferences("mainPrefs", Context.MODE_PRIVATE)
         if (prefs.getString("installation_uuid", null) == null) {
             val editor = prefs.edit()
-            editor.putString("installation_uuid", UUID.randomUUID().toString())
+            val uuid = UUID.randomUUID().toString()
+            editor.putString("installation_uuid", uuid)
             editor.apply()
         }
         info("Installation UUID: ${prefs.getString("installation_uuid", null)}")

@@ -28,15 +28,14 @@ data class AlarmHistoryData(
     @ColumnInfo(name = "dayOfMonth")
     var dayOfMonth: Int,
 
-    // If this is null, it means user did not set an alarm this day
+    // Time when this alarm was set to ring at
     @ColumnInfo(name = "alarmTimeInMillis")
     var alarmTimeInMillis: Long? = null,
 
     // The time taken from the time the alarm rang
     // until user turned the alarm off
     // Calculate alarmTimeInMillis + takenTimeInMillis for wokenTime
-    // If this is null and rangToday == false, no alarm rang on this day
-    // If this is null and rangToday == true, then user didn't properly turn off the alarm
+    // If this is null and rangToday == false, user snoozed or turned off the phone
     @ColumnInfo(name = "takenTimeInMillis")
     var takenTimeInMillis: Long? = null,
 

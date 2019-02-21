@@ -16,6 +16,9 @@ class AlarmDataRepository : BaseRepository() {
         info(alarmDataDao.toString())
     }
 
+
+    //========= Internal functions with DB access via DAO ==========
+
     private fun _getAlarms(): List<AlarmData> {
         return alarmDataDao.getAll()
     }

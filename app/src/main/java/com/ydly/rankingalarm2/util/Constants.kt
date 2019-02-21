@@ -17,4 +17,8 @@ const val DEACTIVATE = false
 
 // Used in SingleAlarmViewModel to denote whether date is being set to today or tomorrow
 const val TODAY = 61
-const val TOMORROW = 53
+const val TOMORROW = 63
+
+// Used in RingAlarmActivity and RingAlarmViewModel to indicate whether alarm was properly turned off or not
+const val WOKE_UP = true
+const val SLEPT_IN = false
