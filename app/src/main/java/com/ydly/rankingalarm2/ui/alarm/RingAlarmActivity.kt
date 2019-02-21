@@ -16,8 +16,6 @@ import androidx.lifecycle.ViewModelProviders
 import com.ydly.rankingalarm2.R
 import com.ydly.rankingalarm2.base.BaseActivity
 import com.ydly.rankingalarm2.data.local.alarm.AlarmData
-import org.jetbrains.anko.info
-import java.util.*
 
 class RingAlarmActivity : BaseActivity() {
 
@@ -48,10 +46,12 @@ class RingAlarmActivity : BaseActivity() {
     override fun initialize() {
         this.window.setFlags(
             WindowManager.LayoutParams.FLAG_FULLSCREEN or
+                    WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON or
                     WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD or
                     WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED or
                     WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON,
             WindowManager.LayoutParams.FLAG_FULLSCREEN or
+                    WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON or
                     WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD or
                     WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED or
                     WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON)
@@ -76,6 +76,8 @@ class RingAlarmActivity : BaseActivity() {
                 MotionEvent.ACTION_DOWN -> {
                     redBtn.setImageResource(R.drawable.red_btn_pressed_medium)
                     handler.removeCallbacks(stopwatch)
+                    releaseWakeLock()
+                    finish()
                     true
                 }
                 MotionEvent.ACTION_UP -> {

@@ -4,6 +4,7 @@ import androidx.room.Room
 import android.content.Context
 import com.ydly.rankingalarm2.data.local.MIGRATION_1_2
 import com.ydly.rankingalarm2.data.local.MIGRATION_2_3
+import com.ydly.rankingalarm2.data.local.MIGRATION_3_4
 import com.ydly.rankingalarm2.data.local.RankingAlarmDatabase
 import com.ydly.rankingalarm2.data.local.alarm.AlarmDataDao
 import com.ydly.rankingalarm2.data.local.alarm.AlarmHistoryDao
@@ -25,7 +26,8 @@ class RoomModule {
         )
             .addMigrations(
                 MIGRATION_1_2,
-                MIGRATION_2_3
+                MIGRATION_2_3,
+                MIGRATION_3_4
             )
             .build()
     }

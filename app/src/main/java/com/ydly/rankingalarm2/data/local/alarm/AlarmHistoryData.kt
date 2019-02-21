@@ -40,9 +40,9 @@ data class AlarmHistoryData(
     @ColumnInfo(name = "takenTimeInMillis")
     var takenTimeInMillis: Long? = null,
 
-    // Boolean value showing whether the alarm for this day has rang
+    // Boolean value showing whether the alarm was successfully turned off
     // Alarm rings once per day, so possible to express in T/F
-    @ColumnInfo(name = "rangToday")
-    var rangToday: Boolean = false
+    @ColumnInfo(name = "wokeUp")
+    var wokeUp: Boolean = false
 
 ) : Parcelable
