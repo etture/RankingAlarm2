@@ -9,6 +9,7 @@ import com.ydly.rankingalarm2.injection.component.ViewInjector
 import com.ydly.rankingalarm2.injection.component.ViewModelInjector
 import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.info
+import java.util.*
 
 class BaseApplication: Application(), AnkoLogger {
 
@@ -33,6 +34,7 @@ class BaseApplication: Application(), AnkoLogger {
         info("Application initialized")
         initComponentManager(this)
         initComponents()
+        setUUID()
     }
 
     private fun initComponentManager(context: Context) {
@@ -60,6 +62,18 @@ class BaseApplication: Application(), AnkoLogger {
 
     private fun initViewInjector() {
         viewInjector = componentManager.getViewInjector()
+    }
+
+    private fun setUUID() {
+        val prefs = getSharedPreferences("mainPrefs", Context.MODE_PRIVATE)
+        // If the uuid is not present, then it means first-time installation
+        // Set a UUID that can be used to identify the device from the server
+        if (prefs.getString("installation_uuid", null) == null) {
+            val editor = prefs.edit()
+            editor.putString("installation_uuid", UUID.randomUUID().toString())
+            editor.apply()
+        }
+        info("Installation UUID: ${prefs.getString("installation_uuid", null)}")
     }
 
 }
