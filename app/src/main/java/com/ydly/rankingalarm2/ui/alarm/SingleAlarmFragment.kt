@@ -113,7 +113,7 @@ class SingleAlarmFragment : BaseFragment() {
                 val alarmTime = alarmData.timeInMillis
 
                 val activateAlarmIntent = Intent(activity, AlarmReceiver::class.java)
-                activateAlarmIntent.putExtra("message", alarmData.toString())
+
                 // marshall AlarmData into ByteArray to be serialized properly
                 activateAlarmIntent.putExtra("alarmDataByteArray", ParcelableUtil.marshall(alarmData))
 

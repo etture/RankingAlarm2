@@ -18,21 +18,11 @@
             android:layout_height="match_parent"
             >
 
-        <TextView
-                android:id="@+id/ringAlarm_txtVw_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                android:textSize="20sp"
-                />
-
         <LinearLayout
                 android:id="@+id/ringAlarm_linLyt_time"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:layout_constraintTop_toBottomOf="@id/ringAlarm_txtVw_text"
+                app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 android:orientation="horizontal"

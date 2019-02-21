@@ -14,16 +14,14 @@ import org.jetbrains.anko.info
 class AlarmReceiver: BaseReceiver() {
 
     override fun onReceive(context: Context?, intent: Intent?) {
-        val message = intent?.getStringExtra("message")
 
         // Get Parcelable AlarmData as ByteArray and unmarshall it to get AlarmData
         val alarmDataByteArray = intent?.getByteArrayExtra("alarmDataByteArray")
         val alarmData = ParcelableUtil.unmarshall(alarmDataByteArray!!, ParcelableCreator.getAlarmDataCreator())
 
-        info("onReceive() -> message: $message, alarmData2: $alarmData, intent: $intent, extras: ${intent.extras}")
+        info("onReceive() ->, alarmData2: $alarmData, intent: $intent, extras: ${intent.extras}")
 
         val serviceIntent = Intent(context!!, RingAlarmService::class.java)
-        serviceIntent.putExtra("message", message)
 
         // Start RingAlarmService
         // Vary versions because Android O and beyond don't require startForegroundService()
@@ -35,7 +33,6 @@ class AlarmReceiver: BaseReceiver() {
 
         // What if I just start the Activity here?
         val activityIntent = Intent(context, RingAlarmActivity::class.java)
-        activityIntent.putExtra("message", message)
         activityIntent.putExtra("alarmData", alarmData)
         info("alarmData: $alarmData")
         activityIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)

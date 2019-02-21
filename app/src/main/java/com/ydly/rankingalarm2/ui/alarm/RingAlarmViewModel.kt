@@ -11,6 +11,8 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.schedulers.Schedulers
+import org.jetbrains.anko.info
+import java.util.*
 import javax.inject.Inject
 
 class RingAlarmViewModel: BaseViewModel() {
@@ -35,10 +37,29 @@ class RingAlarmViewModel: BaseViewModel() {
             .subscribe()
     }
 
+    private fun updateTime(elapsedTime: Long) {
+        val baseSeconds = elapsedTime / 1000
+        val baseMillis = elapsedTime % 1000
+
+        val minuteDisplay = baseSeconds / 60
+        val secondDisplay = baseSeconds % 60
+        val millisDisplay = baseMillis / 10
+
+        minute.value = if(minuteDisplay < 10) "0$minuteDisplay" else minuteDisplay.toString()
+        second.value = if(secondDisplay< 10) "0$secondDisplay" else secondDisplay.toString()
+        millis.value = if(millisDisplay < 10) "0$millisDisplay" else millisDisplay.toString()
+
+//        info("elapsed: $elapsedTime, constructed: $minuteDisplay:$secondDisplay.$millisDisplay")
+    }
+
     //========= Functions accessible by View (data manipulation) ==========
 
     fun untoggle(alarmData: AlarmData) {
         untoggleAlarm(alarmData)
+    }
+
+    fun updateTimeInMillis(elapsedTime: Long) {
+        updateTime(elapsedTime)
     }
 
     fun clearSubscription() {
