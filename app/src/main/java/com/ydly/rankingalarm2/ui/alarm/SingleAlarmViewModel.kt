@@ -386,14 +386,6 @@ class SingleAlarmViewModel : BaseViewModel() {
         toggleChange(toggleButton.isChecked)
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-
-        when (requestCode) {
-
-        }
-
-    }
-
     // Update the dateString showing the date, called on onResume()
     fun updateDate() {
         setTargetDate()

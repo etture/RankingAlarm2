@@ -20,8 +20,10 @@ import com.ydly.rankingalarm2.R
 import com.ydly.rankingalarm2.base.BaseFragment
 import com.ydly.rankingalarm2.data.local.alarm.AlarmData
 import com.ydly.rankingalarm2.receiver.AlarmReceiver
+import com.ydly.rankingalarm2.util.ParcelableUtil
 import com.ydly.rankingalarm2.util.SingleEvent
 import org.jetbrains.anko.info
+import kotlin.random.Random
 
 class SingleAlarmFragment : BaseFragment() {
 
@@ -107,22 +109,28 @@ class SingleAlarmFragment : BaseFragment() {
             it?.getContentIfNotHandled()?.let { alarmData ->
                 info("activateEventObserver -> $alarmData")
 
-                val idInteger = alarmData.timeInMillis.toInt()
+                val requestCode = (alarmData.timeInMillis / 1000).toInt()
                 val alarmTime = alarmData.timeInMillis
 
                 val activateAlarmIntent = Intent(activity, AlarmReceiver::class.java)
                 activateAlarmIntent.putExtra("message", alarmData.toString())
-                activateAlarmIntent.putExtra("alarmData", alarmData)
+                // marshall AlarmData into ByteArray to be serialized properly
+                activateAlarmIntent.putExtra("alarmDataByteArray", ParcelableUtil.marshall(alarmData))
+
+                info("alarmTime: $alarmTime, requestCode: $requestCode")
 
                 // PendingIntent to send broadcast to AlarmReceiver at specified time
                 // Use timeInMillis as 2nd parameter (requestCode),
                 // which uniquely identifies this PendingIntent
                 val pendingIntent = PendingIntent.getBroadcast(
                     activity,
-                    idInteger,
+                    requestCode,
                     activateAlarmIntent,
                     PendingIntent.FLAG_UPDATE_CURRENT
                 )
+
+
+                info("pendingIntent: $pendingIntent, alarmData: $alarmData")
 
                 // Set AlarmManager with PendingIntent at the specified time
                 // For exact time-setting, vary functions based on API version
@@ -141,7 +149,7 @@ class SingleAlarmFragment : BaseFragment() {
             it?.getContentIfNotHandled()?.let { alarmData ->
                 info("deactivateEventObserver -> $alarmData")
 
-                val idInteger = alarmData.timeInMillis.toInt()
+                val requestCode = (alarmData.timeInMillis / 1000).toInt()
 
                 val deactivateAlarmIntent = Intent(activity, AlarmReceiver::class.java)
                 deactivateAlarmIntent.putExtra("message", alarmData.toString())
@@ -151,7 +159,7 @@ class SingleAlarmFragment : BaseFragment() {
                 // which uniquely identifies this PendingIntent
                 val pendingIntent = PendingIntent.getBroadcast(
                     activity,
-                    idInteger,
+                    requestCode,
                     deactivateAlarmIntent,
                     PendingIntent.FLAG_UPDATE_CURRENT
                 )
