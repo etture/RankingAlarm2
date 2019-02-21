@@ -94,4 +94,7 @@ dependencies {
     // Glide
     implementation "com.github.bumptech.glide:glide:$glide_version"
     kapt "com.github.bumptech.glide:compiler:$glide_version"
+
+    // AdMob
+    implementation "com.google.android.gms:play-services-ads:17.1.3"
 }

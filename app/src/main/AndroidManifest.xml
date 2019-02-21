@@ -13,10 +13,15 @@
             android:roundIcon="@mipmap/ic_launcher_round"
             android:supportsRtl="true"
             android:theme="@style/AppTheme">
+
+        <meta-data
+                android:name="com.google.android.gms.ads.APPLICATION_ID"
+                android:value="ca-app-pub-7676679528912008~7400761883"
+                />
+
         <service
                 android:name=".service.RingAlarmService"
-                android:enabled="true"
-                android:exported="true">
+                android:enabled="true">
         </service>
 
         <activity android:name=".ui.alarm.RingAlarmActivity">
@@ -46,7 +51,7 @@
                 android:enabled="true"
                 >
             <intent-filter>
-                <action android:name="android.intent.action.DATE_CHANGED" />
+                <action android:name="android.intent.action.DATE_CHANGED"/>
             </intent-filter>
         </receiver>
 

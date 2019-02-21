@@ -163,6 +163,22 @@
                 android:onClick="@{(v) -> viewModel.onClickToggle(v)}"
                 />
 
+        <com.google.android.gms.ads.AdView
+                android:id="@+id/singleAlarmFrag_adView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                app:layout_constraintBottom_toTopOf="@+id/toggleButton"
+                android:layout_marginEnd="8dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginStart="8dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintHorizontal_bias="0.498"
+                app:adSize="BANNER"
+                app:adUnitId="ca-app-pub-3940256099942544/6300978111"
+                >
+        </com.google.android.gms.ads.AdView>
+
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

@@ -16,6 +16,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
 import androidx.core.app.AlarmManagerCompat
+import com.google.android.gms.ads.AdRequest
 import com.ydly.rankingalarm2.R
 import com.ydly.rankingalarm2.base.BaseFragment
 import com.ydly.rankingalarm2.data.local.alarm.AlarmData
@@ -45,6 +46,9 @@ class SingleAlarmFragment : BaseFragment() {
         // ViewModel and DataBinding setup
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_single_alarm, container, false)
         binding.viewModel = viewModel
+
+        val adRequest = AdRequest.Builder().build()
+        binding.singleAlarmFragAdView.loadAd(adRequest)
     }
 
     @SuppressLint("ClickableViewAccessibility")
