@@ -6,16 +6,20 @@ import com.ydly.rankingalarm2.base.BaseViewModel
 import com.ydly.rankingalarm2.data.local.alarm.AlarmData
 import com.ydly.rankingalarm2.data.repository.AlarmDataRepository
 import com.ydly.rankingalarm2.data.repository.AlarmHistoryRepository
+import com.ydly.rankingalarm2.util.ConnectivityInterceptor
 import io.reactivex.Flowable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.rxkotlin.subscribeBy
+import io.reactivex.rxkotlin.zipWith
 import io.reactivex.schedulers.Schedulers
 import org.jetbrains.anko.info
+import java.net.SocketTimeoutException
 import java.util.*
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
-class RingAlarmViewModel: BaseViewModel() {
+class RingAlarmViewModel : BaseViewModel() {
 
     @Inject
     lateinit var alarmDataRepo: AlarmDataRepository
@@ -47,12 +51,15 @@ class RingAlarmViewModel: BaseViewModel() {
         val secondDisplay = baseSeconds % 60
         val millisDisplay = baseMillis / 10
 
-        minute.value = if(minuteDisplay < 10) "0$minuteDisplay" else minuteDisplay.toString()
-        second.value = if(secondDisplay< 10) "0$secondDisplay" else secondDisplay.toString()
-        millis.value = if(millisDisplay < 10) "0$millisDisplay" else millisDisplay.toString()
+        minute.value = if (minuteDisplay < 10) "0$minuteDisplay" else minuteDisplay.toString()
+        second.value = if (secondDisplay < 10) "0$secondDisplay" else secondDisplay.toString()
+        millis.value = if (millisDisplay < 10) "0$millisDisplay" else millisDisplay.toString()
     }
 
     private fun insertAlarmHistory(wokeUp: Boolean, takenTimeInMillis: Long?) {
+        // Try to insert the alarmHistoryData into local DB
+        // If it succeeds, then send it to the server as well
+        // If not, then don't even bother with the server
         subscription += Flowable.fromCallable {
             alarmHistoryRepo.insertAlarmHistory(
                 alarmTimeInMillis = alarmData.timeInMillis,
@@ -62,11 +69,38 @@ class RingAlarmViewModel: BaseViewModel() {
         }
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
+            // When there is no Internet or Server is down, retry 3 times, then handle error
+            .retryWhen { error ->
+                error.zipWith(Flowable.range(1, 3)) { err: Throwable, cnt: Int -> Pair(err, cnt) }
+                    .flatMap { (throwable, count) ->
+                        info("onClickToggle() -> retryWhen -> error: $throwable")
+                        if (count < 3) {
+                            when (throwable) {
+                                is ConnectivityInterceptor.OfflineException -> {
+                                    Flowable.timer(3, TimeUnit.SECONDS)
+                                }
+                                is SocketTimeoutException -> {
+                                    Flowable.timer(1, TimeUnit.SECONDS)
+                                }
+                                else -> {
+                                    Flowable.error(throwable)
+                                }
+                            }
+                        } else {
+                            Flowable.error(throwable)
+                        }
+                    }
+            }
             .subscribeBy(
-                onNext = {
-                    // Send info to SERVER
+                onNext = { insertId ->
+                    info("insertAlarmHistory() -> insertId: $insertId")
+
                 },
-                onError = { error -> info("insertAlarmHistory() -> error: $error") }
+                onError = { error ->
+                    info("insertAlarmHistory() -> error: $error")
+                    // TODO handle CONNECTION ERROR here, possibly by saving the alarmHistoryData stuff
+                    // somewhere so it can be later sent to the server again when connection is reestablished
+                }
             )
     }
 

@@ -5,8 +5,8 @@ import com.ydly.rankingalarm2.util.ResourceProvider
 import dagger.Module
 import dagger.Provides
 
-@Module(includes = [AppModule::class])
 @Suppress("unused")
+@Module(includes = [AppModule::class])
 class ResourceModule {
 
     @Provides

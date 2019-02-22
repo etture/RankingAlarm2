@@ -4,6 +4,10 @@ import android.content.SharedPreferences
 import com.ydly.rankingalarm2.base.BaseRepository
 import com.ydly.rankingalarm2.data.local.alarm.AlarmHistoryDao
 import com.ydly.rankingalarm2.data.local.alarm.AlarmHistoryData
+import com.ydly.rankingalarm2.data.remote.AlarmHistoryBody
+import com.ydly.rankingalarm2.data.remote.AlarmRetrofitService
+import com.ydly.rankingalarm2.data.remote.SampleResponse
+import io.reactivex.Flowable
 import org.jetbrains.anko.info
 import java.util.*
 import javax.inject.Inject
@@ -13,6 +17,12 @@ class AlarmHistoryRepository : BaseRepository() {
     @Inject
     lateinit var alarmHistoryDao: AlarmHistoryDao
 
+    @Inject
+    lateinit var alarmRetrofitService: AlarmRetrofitService
+
+    @Inject
+    lateinit var mainPrefs: SharedPreferences
+
     init {
         info(alarmHistoryDao.toString())
     }
@@ -20,16 +30,9 @@ class AlarmHistoryRepository : BaseRepository() {
 
     //========= Internal functions with DB access via DAO ==========
 
-//    private fun _newDay(year: Int, month: Int, dayOfMonth: Int): AlarmHistoryData {
-//        val newDay = AlarmHistoryData(
-//            year = year,
-//            month = month,
-//            dayOfMonth = dayOfMonth
-//        )
-//        val insertId = alarmHistoryDao.insert(newDay)
-//        return newDay.apply { id = insertId }
-//    }
-
+    // Try to insert the alarmHistoryData into local DB
+    // If it succeeds, then send it to the server as well
+    // If not, then don't even bother with the server
     private fun _insertAlarmHistory(alarmTimeInMillis: Long, takenTimeInMillis: Long?, wokeUp: Boolean): Long {
         val calendar = Calendar.getInstance()
         calendar.timeInMillis = alarmTimeInMillis
@@ -38,29 +41,63 @@ class AlarmHistoryRepository : BaseRepository() {
         val month = calendar.get(Calendar.MONTH)
         val dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH)
 
+        calendar.set(Calendar.HOUR_OF_DAY, 0)
+        calendar.set(Calendar.MINUTE, 0)
+        calendar.set(Calendar.SECOND, 0)
+        calendar.set(Calendar.MILLISECOND, 0)
+
+        val baseTimeInMillis = calendar.timeInMillis
+        val timeZoneId = calendar.timeZone.id
+
         val alarmHistory = AlarmHistoryData(
             year = year,
             month = month,
             dayOfMonth = dayOfMonth,
+            timeZoneId = timeZoneId,
+            baseTimeInMillis = baseTimeInMillis,
             alarmTimeInMillis = alarmTimeInMillis,
             takenTimeInMillis = takenTimeInMillis,
             wokeUp = wokeUp
         )
 
-        info("_insertAlarmHistory() -> new AlarmHistoryData: $alarmHistory")
+        // Get insertId from inserting into local DB
+        // insertId == 1 means alarm has already been stored locally for today
+        // Send info to SERVER if insertId is not -1
+        val insertId = alarmHistoryDao.insert(alarmHistory)
 
-        return alarmHistoryDao.insert(alarmHistory)
+        info("_insertAlarmHistory() -> new AlarmHistoryData: $alarmHistory, insertId: $insertId")
+
+        if (insertId > 0) {
+            val uuid: String = mainPrefs.getString("installation_uuid", null)!!
+            val alarmHistoryBody = AlarmHistoryBody(
+                userUUID = uuid,
+                year = year,
+                month = month,
+                dayOfMonth = dayOfMonth,
+                timeZoneId = timeZoneId,
+                baseTimeInMillis = baseTimeInMillis,
+                alarmTimeInMillis = alarmTimeInMillis,
+                takenTimeInMillis = takenTimeInMillis,
+                wokeUp = wokeUp
+            )
+            // Send via POST to server
+            val authToken = alarmRetrofitService.uploadAlarmHistory(alarmHistoryBody)
+            info("_insertAlarmHistory() -> authToken: $authToken")
+        }
+
+        return insertId
     }
 
 
     //========= Functions accessible by ViewModel ==========
 
-//    fun newDay(year: Int, month: Int, dayOfMonth: Int): AlarmHistoryData {
-//        return _newDay(year, month, dayOfMonth)
-//    }
-
     fun insertAlarmHistory(alarmTimeInMillis: Long, takenTimeInMillis: Long?, wokeUp: Boolean): Long {
         return _insertAlarmHistory(alarmTimeInMillis, takenTimeInMillis, wokeUp)
+    }
+
+    fun testHeader(): Flowable<SampleResponse> {
+        info("testHeader()")
+        return alarmRetrofitService.testHeader()
     }
 
 }

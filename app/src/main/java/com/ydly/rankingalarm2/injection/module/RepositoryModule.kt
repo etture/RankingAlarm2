@@ -6,8 +6,8 @@ import com.ydly.rankingalarm2.injection.scope.ViewModelScope
 import dagger.Module
 import dagger.Provides
 
-@Module
 @Suppress("unused")
+@Module
 class RepositoryModule {
 
     @Provides

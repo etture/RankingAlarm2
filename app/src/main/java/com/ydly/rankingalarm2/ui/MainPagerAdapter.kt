@@ -18,7 +18,6 @@ class MainPagerAdapter(fm: FragmentManager, context: Context) : FragmentPagerAda
 
     override fun getItem(position: Int): Fragment =
         when (position) {
-//            0 -> AlarmFragment.newInstance()
             0 -> SingleAlarmFragment.newInstance()
             else -> RankingFragment.newInstance()
         }
@@ -26,7 +25,6 @@ class MainPagerAdapter(fm: FragmentManager, context: Context) : FragmentPagerAda
     override fun getPageTitle(position: Int): CharSequence? =
         when (position) {
             0 -> ctx.getString(R.string.alarm)
-//            1 -> ctx.getString(R.string.alarm)
             else -> ctx.getString(R.string.ranking)
         }
 }

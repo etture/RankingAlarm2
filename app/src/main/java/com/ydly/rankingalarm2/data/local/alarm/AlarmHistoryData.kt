@@ -28,9 +28,19 @@ data class AlarmHistoryData(
     @ColumnInfo(name = "dayOfMonth")
     var dayOfMonth: Int,
 
+    // String ID of time zone at the time the alarm rings
+    // e.g. "America/Los_Angeles", "Asia/Seoul"
+    @ColumnInfo(name = "timeZoneId")
+    var timeZoneId: String,
+
+    // Millis time of 00:00 at the time of the alarm ringing
+    // Used to determine time zone and relative time
+    @ColumnInfo(name = "baseTimeInMillis")
+    var baseTimeInMillis: Long,
+
     // Time when this alarm was set to ring at
     @ColumnInfo(name = "alarmTimeInMillis")
-    var alarmTimeInMillis: Long? = null,
+    var alarmTimeInMillis: Long,
 
     // The time taken from the time the alarm rang
     // until user turned the alarm off

@@ -1,6 +1,5 @@
 package com.ydly.rankingalarm2.ui.alarm
 
-import android.content.Intent
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
@@ -10,20 +9,27 @@ import com.ydly.rankingalarm2.R
 import com.ydly.rankingalarm2.base.BaseViewModel
 import com.ydly.rankingalarm2.data.local.alarm.AlarmData
 import com.ydly.rankingalarm2.data.repository.AlarmDataRepository
+import com.ydly.rankingalarm2.data.repository.AlarmHistoryRepository
 import com.ydly.rankingalarm2.util.*
 import io.reactivex.Flowable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.rxkotlin.subscribeBy
+import io.reactivex.rxkotlin.zipWith
 import io.reactivex.schedulers.Schedulers
 import org.jetbrains.anko.info
+import java.net.SocketTimeoutException
 import java.util.*
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 class SingleAlarmViewModel : BaseViewModel() {
 
     @Inject
     lateinit var alarmDataRepo: AlarmDataRepository
+
+    @Inject
+    lateinit var alarmHistoryRepo: AlarmHistoryRepository
 
     private lateinit var myAlarm: AlarmData
     // Local state variable for whether ToggleButton is toggled on or off
@@ -381,9 +387,51 @@ class SingleAlarmViewModel : BaseViewModel() {
     fun observeDeactivateEvent(): LiveData<SingleEvent<AlarmData>> = deactivateEvent
 
     fun onClickToggle(view: View) {
-        info("onClickToggle() -> hour: ${hour.value}, minute: ${minute.value}")
         val toggleButton = view as ToggleButton
         toggleChange(toggleButton.isChecked)
+
+        // Check local timeInMillis
+        val cal = Calendar.getInstance()
+        cal.set(Calendar.HOUR_OF_DAY, 0)
+        cal.set(Calendar.MINUTE, 0)
+        cal.set(Calendar.SECOND, 0)
+        cal.set(Calendar.MILLISECOND, 0)
+
+        // Test Endpoint
+        subscription += alarmHistoryRepo.testHeader()
+            // When there is no Internet or Server is down, retry 3 times, then handle error
+            .retryWhen { error ->
+                error.zipWith(Flowable.range(1, 3)) { err: Throwable, cnt: Int -> Pair(err, cnt) }
+                    .flatMap { (throwable, count) ->
+                        info("onClickToggle() -> retryWhen -> error: $throwable")
+                        if (count < 3) {
+                            when (throwable) {
+                                is ConnectivityInterceptor.OfflineException -> {
+                                    Flowable.timer(3, TimeUnit.SECONDS)
+                                }
+                                is SocketTimeoutException -> {
+                                    Flowable.timer(1, TimeUnit.SECONDS)
+                                }
+                                else -> {
+                                    Flowable.error(throwable)
+                                }
+                            }
+                        } else {
+                            Flowable.error(throwable)
+                        }
+                    }
+            }
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribeBy(
+                onNext = { response ->
+                    val message = response.message
+                    info("onClickToggle() -> message: $message")
+                },
+                onError = { error ->
+                    info("onClickToggle() -> error: $error")
+                }
+            )
     }
 
     // Update the dateString showing the date, called on onResume()
