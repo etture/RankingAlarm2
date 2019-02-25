@@ -4,15 +4,14 @@ import android.content.SharedPreferences
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.google.gson.Gson
-import com.google.gson.GsonBuilder
 import com.ydly.rankingalarm2.base.BaseViewModel
 import com.ydly.rankingalarm2.data.local.alarm.AlarmData
-import com.ydly.rankingalarm2.data.local.alarm.AlarmHistoryData
 import com.ydly.rankingalarm2.data.remote.AlarmHistoryBody
 import com.ydly.rankingalarm2.data.remote.ErrorResponse
 import com.ydly.rankingalarm2.data.repository.AlarmDataRepository
 import com.ydly.rankingalarm2.data.repository.AlarmHistoryRepository
 import com.ydly.rankingalarm2.util.ConnectivityInterceptor
+import com.ydly.rankingalarm2.util.DateTimeUtilMillisToUnits
 import io.reactivex.Flowable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.rxkotlin.plusAssign
@@ -70,6 +69,11 @@ class RingAlarmViewModel : BaseViewModel() {
     }
 
     private fun insertAlarmHistory(wokeUp: Boolean, takenTimeInMillis: Long?) {
+
+        val dateTimeUtil = DateTimeUtilMillisToUnits(alarmData.timeInMillis)
+        val hour = dateTimeUtil.hour24
+        val minute = dateTimeUtil.minute
+
         // Try to insert the alarmHistoryData into local DB
         // If it succeeds, then send it to the server as well
         // If not, then don't even bother with the server
@@ -77,7 +81,9 @@ class RingAlarmViewModel : BaseViewModel() {
             alarmHistoryRepo.insertAlarmHistory(
                 alarmTimeInMillis = alarmData.timeInMillis,
                 wokeUp = wokeUp,
-                takenTimeInMillis = takenTimeInMillis
+                takenTimeInMillis = takenTimeInMillis,
+                hour = hour,
+                minute = minute
             )
         }
             .subscribeOn(Schedulers.io())
@@ -91,11 +97,13 @@ class RingAlarmViewModel : BaseViewModel() {
                     // Send info to SERVER if insertId is not -1
                     if (insertId > -2) {
 
-                        // TODO Create alarmhistorybody
-                        val alarmHistoryBody = createAlarmHistoryData(
+                        // TODO Create alarmHistoryBody
+                        val alarmHistoryBody = createAlarmHistoryBody(
                             alarmTimeInMillis = alarmData.timeInMillis,
                             wokeUp = wokeUp,
-                            takenTimeInMillis = takenTimeInMillis
+                            takenTimeInMillis = takenTimeInMillis,
+                            hour = hour,
+                            minute = minute
                         )
 
                         alarmHistoryRepo.uploadAlarmHistory(alarmHistoryBody)
@@ -150,6 +158,9 @@ class RingAlarmViewModel : BaseViewModel() {
                                 },
                                 onError = { error ->
                                     info("uploadAlarmHistory() -> error: $error")
+
+                                    val alarmHistoryJson = gson.toJson(alarmHistoryBody)
+                                    putToPrefs("pendingAlarmHistoryJSON", alarmHistoryJson)
                                 }
                             )
                     }
@@ -162,13 +173,16 @@ class RingAlarmViewModel : BaseViewModel() {
             )
     }
 
-    private fun createAlarmHistoryData(
+    private fun createAlarmHistoryBody(
         alarmTimeInMillis: Long,
         takenTimeInMillis: Long?,
-        wokeUp: Boolean
+        wokeUp: Boolean,
+        hour: Int,
+        minute: Int
     ): AlarmHistoryBody {
         val calendar = Calendar.getInstance()
         calendar.timeInMillis = alarmTimeInMillis
+        info("createAlarmHistoryBody() -> alarmTimeInMillis: $alarmTimeInMillis")
 
         val year = calendar.get(Calendar.YEAR)
         val month = calendar.get(Calendar.MONTH)
@@ -182,12 +196,16 @@ class RingAlarmViewModel : BaseViewModel() {
         val baseTimeInMillis = calendar.timeInMillis
         val timeZoneId = calendar.timeZone.id
 
+        info("createAlarmHistoryBody() -> baseTimeInMillis: $baseTimeInMillis")
+
         val uuid: String = mainPrefs.getString("installation_uuid", null)!!
         return AlarmHistoryBody(
             userUUID = uuid,
             year = year,
             month = month,
             dayOfMonth = dayOfMonth,
+            hour = hour,
+            minute = minute,
             timeZoneId = timeZoneId,
             baseTimeInMillis = baseTimeInMillis,
             alarmTimeInMillis = alarmTimeInMillis,

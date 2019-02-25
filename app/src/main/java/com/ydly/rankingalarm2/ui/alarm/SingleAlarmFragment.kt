@@ -23,6 +23,7 @@ import com.ydly.rankingalarm2.data.local.alarm.AlarmData
 import com.ydly.rankingalarm2.receiver.AlarmReceiver
 import com.ydly.rankingalarm2.util.ParcelableUtil
 import com.ydly.rankingalarm2.util.SingleEvent
+import kotlinx.android.synthetic.main.activity_ring_alarm.*
 import org.jetbrains.anko.info
 import kotlin.random.Random
 

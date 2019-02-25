@@ -32,8 +32,11 @@ class SingleAlarmViewModel : BaseViewModel() {
     lateinit var alarmHistoryRepo: AlarmHistoryRepository
 
     private lateinit var myAlarm: AlarmData
+
     // Local state variable for whether ToggleButton is toggled on or off
     private var isToggled = false
+    private var rangToday = false
+
     // Local state variable for the target date for the upcoming alarm to be set
     private lateinit var targetDate: DateTimeUtilMillisToUnits
 
@@ -48,9 +51,6 @@ class SingleAlarmViewModel : BaseViewModel() {
     private val toggleBackOffEvent: MutableLiveData<SingleEvent<Boolean>> = MutableLiveData()
 
     // Activate/Deactive alarm event to set clock visibility status
-    // Boolean value denotes whether ToggleButton was toggled on or off
-    private val activateAlarmEvent: MutableLiveData<SingleEvent<Pair<AlarmData, Boolean>>> = MutableLiveData()
-
     private val activateEvent: MutableLiveData<SingleEvent<AlarmData>> = MutableLiveData()
     private val deactivateEvent: MutableLiveData<SingleEvent<AlarmData>> = MutableLiveData()
 
@@ -69,6 +69,7 @@ class SingleAlarmViewModel : BaseViewModel() {
     // For setting DateString
     private val dateString = MutableLiveData<String>()
     private val todayTmrwString = MutableLiveData<String>()
+    private val textOffString = MutableLiveData<String>()
 
     // MediatorLiveData for 2-way DataBinding on hour
     private val hourMediator = MediatorLiveData<Int>().apply {
@@ -160,6 +161,28 @@ class SingleAlarmViewModel : BaseViewModel() {
         setTimeVisibility(activated = myAlarm.isToggledOn)
         isToggled = myAlarm.isToggledOn
         info("initDisplayedElements() -> hour: ${dateTimeUtil.hour24}, minute: ${dateTimeUtil.minute}, isToggled: ${myAlarm.isToggledOn}")
+
+        // Set data-binded ToggleButton textOff text ("challenge!" or just "set alarm")
+        subscription += alarmHistoryRepo.getToday(
+            year = dateTimeUtil.year,
+            month = dateTimeUtil.month,
+            dayOfMonth = dateTimeUtil.dayOfMonth
+        )
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribeBy(
+                onNext = { todayHistory ->
+                    // Alarm hasn't rung yet today
+                    if (todayHistory.isEmpty()) {
+
+                    }
+                    // Alarm has already rung today
+                    else {
+                        rangToday = true
+                    }
+                },
+                onError = {}
+            )
     }
 
 
@@ -356,11 +379,19 @@ class SingleAlarmViewModel : BaseViewModel() {
             TODAY -> {
                 todayTmrwString.value = res.getString(R.string.today)
                 buildDateTodayTmrwString()
+
+                // If alarm rang today, then "set alarm", if not, "challenge!"
+                if(rangToday) {
+                    textOffString.value = res.getString(R.string.set_alarm)
+                }else {
+                    textOffString.value = res.getString(R.string.challenge)
+                }
             }
             TOMORROW -> {
                 targetDate.add(Calendar.DAY_OF_MONTH, 1)
                 todayTmrwString.value = res.getString(R.string.tomorrow)
                 buildDateTodayTmrwString()
+                textOffString.value = res.getString(R.string.challenge)
             }
         }
     }
@@ -451,5 +482,6 @@ class SingleAlarmViewModel : BaseViewModel() {
     fun getAmpmString(): LiveData<String> = ampmString
     fun getDateString(): LiveData<String> = dateString
     fun getTodayTmrwString(): LiveData<String> = todayTmrwString
+    fun getTextOffString(): LiveData<String> = textOffString
 
 }

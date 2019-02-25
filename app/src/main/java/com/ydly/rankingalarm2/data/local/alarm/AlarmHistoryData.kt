@@ -28,6 +28,12 @@ data class AlarmHistoryData(
     @ColumnInfo(name = "dayOfMonth")
     var dayOfMonth: Int,
 
+    @ColumnInfo(name = "hour")
+    var hour: Int,
+
+    @ColumnInfo(name = "minute")
+    var minute: Int,
+
     // String ID of time zone at the time the alarm rings
     // e.g. "America/Los_Angeles", "Asia/Seoul"
     @ColumnInfo(name = "timeZoneId")

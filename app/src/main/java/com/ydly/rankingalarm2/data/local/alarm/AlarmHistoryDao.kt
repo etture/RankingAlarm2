@@ -11,6 +11,9 @@ interface AlarmHistoryDao {
     @Query("SELECT * FROM alarmHistoryData")
     fun getAll(): Flowable<List<AlarmHistoryData>>
 
+    @Query("SELECT * FROM alarmHistoryData WHERE year = :year AND month = :month AND dayOfMonth = :dayOfMonth LIMIT 1")
+    fun getToday(year: Int, month: Int, dayOfMonth: Int): Flowable<List<AlarmHistoryData>>
+
     @Insert(onConflict = IGNORE)
     fun insert(alarmHistory: AlarmHistoryData): Long
 

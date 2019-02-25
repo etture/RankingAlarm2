@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
 import android.view.View
 import android.widget.TextView
+import android.widget.ToggleButton
 import com.ydly.rankingalarm2.util.extension.getParentActivity
 
 @BindingAdapter("mutableText")
@@ -33,5 +34,13 @@ fun setMutableVisibility(view: View, visibility: LiveData<Boolean>) {
             }
             view.visibility = visibleStatus
         })
+    }
+}
+
+@BindingAdapter("mutableTextOff")
+fun setMutableTextOff(view: ToggleButton, text: LiveData<String>?) {
+    val parentActivity: AppCompatActivity? = view.getParentActivity()
+    if(parentActivity != null && text != null) {
+        text.observe(parentActivity, Observer { value -> view.textOff = value ?: "" })
     }
 }

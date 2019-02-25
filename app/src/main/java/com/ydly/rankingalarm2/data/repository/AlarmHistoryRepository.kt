@@ -29,9 +29,6 @@ class AlarmHistoryRepository : BaseRepository() {
     @Inject
     lateinit var alarmRetrofitService: AlarmRetrofitService
 
-    @Inject
-    lateinit var mainPrefs: SharedPreferences
-
     init {
         info(alarmHistoryDao.toString())
     }
@@ -45,6 +42,8 @@ class AlarmHistoryRepository : BaseRepository() {
     private fun _insertAlarmHistory(
         alarmTimeInMillis: Long,
         takenTimeInMillis: Long?,
+        hour: Int,
+        minute: Int,
         wokeUp: Boolean
     ): Long {
 
@@ -67,6 +66,8 @@ class AlarmHistoryRepository : BaseRepository() {
             year = year,
             month = month,
             dayOfMonth = dayOfMonth,
+            hour = hour,
+            minute = minute,
             timeZoneId = timeZoneId,
             baseTimeInMillis = baseTimeInMillis,
             alarmTimeInMillis = alarmTimeInMillis,
@@ -85,46 +86,19 @@ class AlarmHistoryRepository : BaseRepository() {
     }
 
     private fun _uploadAlarmHistory(alarmHistoryBody: AlarmHistoryBody): Flowable<Response<SampleResponse>> {
-
-//        val calendar = Calendar.getInstance()
-//        calendar.timeInMillis = alarmTimeInMillis
-//
-//        val year = calendar.get(Calendar.YEAR)
-//        val month = calendar.get(Calendar.MONTH)
-//        val dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH)
-//
-//        calendar.set(Calendar.HOUR_OF_DAY, 0)
-//        calendar.set(Calendar.MINUTE, 0)
-//        calendar.set(Calendar.SECOND, 0)
-//        calendar.set(Calendar.MILLISECOND, 0)
-//
-//        val baseTimeInMillis = calendar.timeInMillis
-//        val timeZoneId = calendar.timeZone.id
-//
-//
-//        val uuid: String = mainPrefs.getString("installation_uuid", null)!!
-//        val alarmHistoryBody = AlarmHistoryBody(
-//            userUUID = uuid,
-//            year = year,
-//            month = month,
-//            dayOfMonth = dayOfMonth,
-//            timeZoneId = timeZoneId,
-//            baseTimeInMillis = baseTimeInMillis,
-//            alarmTimeInMillis = alarmTimeInMillis,
-//            takenTimeInMillis = takenTimeInMillis,
-//            wokeUp = wokeUp
-//        )
-//
-
         // Send via POST to server
         return alarmRetrofitService.uploadAlarmHistory(alarmHistoryBody)
+    }
+
+    private fun _getToday(year: Int, month: Int, dayOfMonth: Int): Flowable<List<AlarmHistoryData>> {
+        return alarmHistoryDao.getToday(year, month, dayOfMonth)
     }
 
 
     //========= Functions accessible by ViewModel ==========
 
-    fun insertAlarmHistory(alarmTimeInMillis: Long, takenTimeInMillis: Long?, wokeUp: Boolean): Long {
-        return _insertAlarmHistory(alarmTimeInMillis, takenTimeInMillis, wokeUp)
+    fun insertAlarmHistory(alarmTimeInMillis: Long, takenTimeInMillis: Long?, hour: Int, minute: Int, wokeUp: Boolean): Long {
+        return _insertAlarmHistory(alarmTimeInMillis, takenTimeInMillis, hour, minute, wokeUp)
     }
 
     fun uploadAlarmHistory(alarmHistoryBody: AlarmHistoryBody): Flowable<Response<SampleResponse>> {
@@ -134,6 +108,10 @@ class AlarmHistoryRepository : BaseRepository() {
     fun testHeader(): Flowable<SampleResponse> {
         info("testHeader()")
         return alarmRetrofitService.testHeader()
+    }
+
+    fun getToday(year: Int, month: Int, dayOfMonth: Int): Flowable<List<AlarmHistoryData>> {
+        return _getToday(year, month, dayOfMonth)
     }
 
 }

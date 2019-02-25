@@ -89,3 +89,34 @@ val MIGRATION_4_5 = object : Migration(4, 5) {
         }
     }
 }
+
+val MIGRATION_5_6 = object : Migration(5, 6) {
+    override fun migrate(database: SupportSQLiteDatabase) {
+        // Add timeZoneId, baseTimeInMillis to alarmHistoryData
+        try {
+            database.beginTransaction()
+            database.execSQL("DROP INDEX index_alarmHistoryData_year_month_dayOfMonth")
+            database.execSQL("DROP TABLE alarmHistoryData")
+            database.execSQL(
+                "CREATE TABLE alarmHistoryData (" +
+                        "id INTEGER PRIMARY KEY," +
+                        "year INTEGER NOT NULL," +
+                        "month INTEGER NOT NULL," +
+                        "dayOfMonth INTEGER NOT NULL," +
+                        "hour INTEGER NOT NULL," +
+                        "minute INTEGER NOT NULL," +
+                        "timeZoneId TEXT NOT NULL," +
+                        "baseTimeInMillis INTEGER NOT NULL," +
+                        "alarmTimeInMillis INTEGER NOT NULL," +
+                        "takenTimeInMillis INTEGER," +
+                        "wokeUp INTEGER NOT NULL DEFAULT 0" +
+                        ")"
+            )
+            database.execSQL("CREATE UNIQUE INDEX index_alarmHistoryData_year_month_dayOfMonth ON alarmHistoryData(year, month, dayOfMonth)")
+            database.setTransactionSuccessful()
+        } finally {
+            database.endTransaction()
+        }
+    }
+}
+
