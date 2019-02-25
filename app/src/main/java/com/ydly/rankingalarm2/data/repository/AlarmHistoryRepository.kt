@@ -7,9 +7,18 @@ import com.ydly.rankingalarm2.data.local.alarm.AlarmHistoryData
 import com.ydly.rankingalarm2.data.remote.AlarmHistoryBody
 import com.ydly.rankingalarm2.data.remote.AlarmRetrofitService
 import com.ydly.rankingalarm2.data.remote.SampleResponse
+import com.ydly.rankingalarm2.util.ConnectivityInterceptor
 import io.reactivex.Flowable
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.rxkotlin.plusAssign
+import io.reactivex.rxkotlin.subscribeBy
+import io.reactivex.rxkotlin.zipWith
+import io.reactivex.schedulers.Schedulers
 import org.jetbrains.anko.info
+import retrofit2.Response
+import java.net.SocketTimeoutException
 import java.util.*
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 class AlarmHistoryRepository : BaseRepository() {
@@ -33,7 +42,12 @@ class AlarmHistoryRepository : BaseRepository() {
     // Try to insert the alarmHistoryData into local DB
     // If it succeeds, then send it to the server as well
     // If not, then don't even bother with the server
-    private fun _insertAlarmHistory(alarmTimeInMillis: Long, takenTimeInMillis: Long?, wokeUp: Boolean): Long {
+    private fun _insertAlarmHistory(
+        alarmTimeInMillis: Long,
+        takenTimeInMillis: Long?,
+        wokeUp: Boolean
+    ): Long {
+
         val calendar = Calendar.getInstance()
         calendar.timeInMillis = alarmTimeInMillis
 
@@ -67,25 +81,43 @@ class AlarmHistoryRepository : BaseRepository() {
 
         info("_insertAlarmHistory() -> new AlarmHistoryData: $alarmHistory, insertId: $insertId")
 
-        if (insertId > 0) {
-            val uuid: String = mainPrefs.getString("installation_uuid", null)!!
-            val alarmHistoryBody = AlarmHistoryBody(
-                userUUID = uuid,
-                year = year,
-                month = month,
-                dayOfMonth = dayOfMonth,
-                timeZoneId = timeZoneId,
-                baseTimeInMillis = baseTimeInMillis,
-                alarmTimeInMillis = alarmTimeInMillis,
-                takenTimeInMillis = takenTimeInMillis,
-                wokeUp = wokeUp
-            )
-            // Send via POST to server
-            val authToken = alarmRetrofitService.uploadAlarmHistory(alarmHistoryBody)
-            info("_insertAlarmHistory() -> authToken: $authToken")
-        }
-
         return insertId
+    }
+
+    private fun _uploadAlarmHistory(alarmHistoryBody: AlarmHistoryBody): Flowable<Response<SampleResponse>> {
+
+//        val calendar = Calendar.getInstance()
+//        calendar.timeInMillis = alarmTimeInMillis
+//
+//        val year = calendar.get(Calendar.YEAR)
+//        val month = calendar.get(Calendar.MONTH)
+//        val dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH)
+//
+//        calendar.set(Calendar.HOUR_OF_DAY, 0)
+//        calendar.set(Calendar.MINUTE, 0)
+//        calendar.set(Calendar.SECOND, 0)
+//        calendar.set(Calendar.MILLISECOND, 0)
+//
+//        val baseTimeInMillis = calendar.timeInMillis
+//        val timeZoneId = calendar.timeZone.id
+//
+//
+//        val uuid: String = mainPrefs.getString("installation_uuid", null)!!
+//        val alarmHistoryBody = AlarmHistoryBody(
+//            userUUID = uuid,
+//            year = year,
+//            month = month,
+//            dayOfMonth = dayOfMonth,
+//            timeZoneId = timeZoneId,
+//            baseTimeInMillis = baseTimeInMillis,
+//            alarmTimeInMillis = alarmTimeInMillis,
+//            takenTimeInMillis = takenTimeInMillis,
+//            wokeUp = wokeUp
+//        )
+//
+
+        // Send via POST to server
+        return alarmRetrofitService.uploadAlarmHistory(alarmHistoryBody)
     }
 
 
@@ -93,6 +125,10 @@ class AlarmHistoryRepository : BaseRepository() {
 
     fun insertAlarmHistory(alarmTimeInMillis: Long, takenTimeInMillis: Long?, wokeUp: Boolean): Long {
         return _insertAlarmHistory(alarmTimeInMillis, takenTimeInMillis, wokeUp)
+    }
+
+    fun uploadAlarmHistory(alarmHistoryBody: AlarmHistoryBody): Flowable<Response<SampleResponse>> {
+        return _uploadAlarmHistory(alarmHistoryBody)
     }
 
     fun testHeader(): Flowable<SampleResponse> {

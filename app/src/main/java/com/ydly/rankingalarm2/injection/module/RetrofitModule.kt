@@ -43,9 +43,9 @@ class RetrofitModule {
                     .build()
                 chain.proceed(newRequest)
             }
-//            .connectTimeout(2, TimeUnit.SECONDS)
-//            .writeTimeout(2, TimeUnit.SECONDS)
-//            .readTimeout(10, TimeUnit.SECONDS)
+            .connectTimeout(4, TimeUnit.SECONDS)
+            .writeTimeout(4, TimeUnit.SECONDS)
+            .readTimeout(4, TimeUnit.SECONDS)
             .build()
         retrofitBuilder.client(authTokenClient)
         return retrofitBuilder.build()

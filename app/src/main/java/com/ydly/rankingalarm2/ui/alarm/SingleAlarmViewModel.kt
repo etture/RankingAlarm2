@@ -401,10 +401,10 @@ class SingleAlarmViewModel : BaseViewModel() {
         subscription += alarmHistoryRepo.testHeader()
             // When there is no Internet or Server is down, retry 3 times, then handle error
             .retryWhen { error ->
-                error.zipWith(Flowable.range(1, 3)) { err: Throwable, cnt: Int -> Pair(err, cnt) }
+                error.zipWith(Flowable.range(1, 4)) { err: Throwable, cnt: Int -> Pair(err, cnt) }
                     .flatMap { (throwable, count) ->
                         info("onClickToggle() -> retryWhen -> error: $throwable")
-                        if (count < 3) {
+                        if (count < 4) {
                             when (throwable) {
                                 is ConnectivityInterceptor.OfflineException -> {
                                     Flowable.timer(3, TimeUnit.SECONDS)
