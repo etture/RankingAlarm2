@@ -44,6 +44,14 @@ class RingAlarmActivity : BaseActivity() {
         override fun run() {
             elapsedTime = System.currentTimeMillis() - startTime
             viewModel.updateTimeInMillis(elapsedTime)
+
+            // Finish Activity if 5 minutes have passed
+            if(elapsedTime > 300000) {
+                viewModel.setNewAlarmHistory(SLEPT_IN)
+                releaseWakeLock()
+                finish()
+            }
+
             handler.postDelayed(this, 10)
         }
     }

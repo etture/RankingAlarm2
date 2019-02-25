@@ -95,7 +95,7 @@ class RingAlarmViewModel : BaseViewModel() {
                     // Get insertId from inserting into local DB
                     // insertId == 1 means alarm has already been stored locally for today
                     // Send info to SERVER if insertId is not -1
-                    if (insertId > -2) {
+                    if (insertId > 0) {
 
                         // TODO Create alarmHistoryBody
                         val alarmHistoryBody = createAlarmHistoryBody(
