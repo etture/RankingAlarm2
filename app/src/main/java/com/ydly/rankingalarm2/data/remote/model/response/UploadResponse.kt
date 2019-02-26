@@ -5,5 +5,6 @@ import com.google.gson.annotations.SerializedName
 
 data class UploadResponse (
     @SerializedName("message") @Expose val message: String,
-    @SerializedName("dayRank") @Expose val dayRank: Int
+    @SerializedName("dayRank") @Expose val dayRank: Int,
+    @SerializedName("morningRank") @Expose val morningRank: Int
 )

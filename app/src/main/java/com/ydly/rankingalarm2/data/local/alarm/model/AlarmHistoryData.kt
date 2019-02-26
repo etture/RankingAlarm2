@@ -58,6 +58,24 @@ data class AlarmHistoryData(
     // Boolean value showing whether the alarm was successfully turned off
     // Alarm rings once per day, so possible to express in T/F
     @ColumnInfo(name = "wokeUp")
-    var wokeUp: Boolean = false
+    var wokeUp: Boolean = false,
+
+    // Rank for the whole day -> null if wokeUp == false
+    @ColumnInfo(name = "dayRank")
+    var dayRank: Int? = null,
+
+    // Rank for the morning (3 am ~ 11 am) -> null if wokeUp == false
+    @ColumnInfo(name = "morningRank")
+    var morningRank: Int? = null,
+
+    // Total # of people who woke up that day
+    // -> null if wokeUp == false or until the next day cycle
+    @ColumnInfo(name = "dayNumPeople")
+    var dayNumPeople: Int? = null,
+
+    // Total # of people who woke up that morning
+    // -> null if wokeUp == false or until the next morning cycle
+    @ColumnInfo(name = "morningNumPeople")
+    var morningNumPeople: Int? = null
 
 ) : Parcelable

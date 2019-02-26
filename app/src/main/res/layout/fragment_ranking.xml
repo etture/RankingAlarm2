@@ -27,8 +27,8 @@
                 >
 
             <include
-                    android:id="@+id/rnkFrag_totalScorePane"
-                    layout="@layout/pane_total_score"
+                    android:id="@+id/rnkFrag_utilBtnsPane"
+                    layout="@layout/pane_util_btns"
                     bind:viewModel="@{viewModel}"
                     />
 

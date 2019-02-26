@@ -10,10 +10,10 @@ import retrofit2.http.POST
 
 interface AlarmRetrofitService {
 
-    @POST("uploadHistory")
+    @POST("rank/uploadAndGetRank")
     fun uploadAlarmHistory(@Body alarmHistoryBody: AlarmHistoryBody): Flowable<Response<UploadResponse>>
 
-    @POST("testHeader")
+    @POST("test/testHeader")
     fun testHeader(): Flowable<SampleResponse>
 
 }

@@ -12,7 +12,7 @@ import androidx.lifecycle.ViewModelProviders
 import com.ydly.rankingalarm2.R
 import com.ydly.rankingalarm2.base.BaseFragment
 import com.ydly.rankingalarm2.databinding.FragmentRankingBinding
-import kotlinx.android.synthetic.main.pane_total_score.*
+import kotlinx.android.synthetic.main.pane_util_btns.*
 import org.jetbrains.anko.info
 
 

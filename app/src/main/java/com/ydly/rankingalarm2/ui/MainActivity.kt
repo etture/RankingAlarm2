@@ -1,6 +1,8 @@
 package com.ydly.rankingalarm2.ui
 
+import android.os.Build
 import android.os.Bundle
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import com.ydly.rankingalarm2.R
 import kotlinx.android.synthetic.main.activity_main.*
@@ -23,6 +25,11 @@ class MainActivity : AppCompatActivity(), AnkoLogger {
         val pagerAdapter = MainPagerAdapter(supportFragmentManager, this)
         viewpager_main.adapter = pagerAdapter
         tabs_main.setupWithViewPager(viewpager_main)
+
+        // Set status bar text to dark if primaryDark color is light (For API level 23 or higher)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
+        }
     }
 
     override fun onResume() {

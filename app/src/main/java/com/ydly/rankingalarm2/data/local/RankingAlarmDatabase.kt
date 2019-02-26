@@ -7,7 +7,7 @@ import com.ydly.rankingalarm2.data.local.alarm.dao.AlarmDataDao
 import com.ydly.rankingalarm2.data.local.alarm.dao.AlarmHistoryDao
 import com.ydly.rankingalarm2.data.local.alarm.model.AlarmHistoryData
 
-@Database(entities = [AlarmData::class, AlarmHistoryData::class], version = 6, exportSchema = true)
+@Database(entities = [AlarmData::class, AlarmHistoryData::class], version = 7, exportSchema = true)
 abstract class RankingAlarmDatabase : RoomDatabase() {
 
     abstract fun alarmDataDao(): AlarmDataDao

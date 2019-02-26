@@ -97,7 +97,7 @@ class RingAlarmViewModel : BaseViewModel() {
                     // Send info to SERVER if insertId is not -1
                     if (insertId > 0 && wokeUp) {
 
-                        // TODO Create alarmHistoryBody
+                        // Create alarmHistoryBody
                         val alarmHistoryBody = createAlarmHistoryBody(
                             alarmTimeInMillis = alarmData.timeInMillis,
                             takenTimeInMillis = takenTimeInMillis!!,
@@ -133,10 +133,14 @@ class RingAlarmViewModel : BaseViewModel() {
                             .subscribeBy(
                                 onNext = { response ->
                                     if (response.isSuccessful) {
+
                                         val message = response.body()?.message
-                                        val rankingInTimeZone = response.body()?.dayRank
-                                        info("uploadAlarmHistory() -> message: $message, dayRank: $rankingInTimeZone")
+                                        val dayRank = response.body()?.dayRank
+                                        val morningRank = response.body()?.morningRank
+                                        info("uploadAlarmHistory() -> message: $message, dayRank: $dayRank, morningRank: $morningRank")
+
                                     } else {
+
                                         val statusCode = response.code()
                                         val jsonErrorObj = JSONObject(response.errorBody()?.string())
                                         val mError: ErrorResponse =
@@ -154,6 +158,7 @@ class RingAlarmViewModel : BaseViewModel() {
                                                 putToPrefs("pendingAlarmHistoryJSON", alarmHistoryJson)
                                             }
                                         }
+
                                     }
                                 },
                                 onError = { error ->
