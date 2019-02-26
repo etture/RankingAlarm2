@@ -1,18 +1,19 @@
-package com.ydly.rankingalarm2.ui.alarm
+package com.ydly.rankingalarm2.ui.alarm.unused
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import com.ydly.rankingalarm2.R
 import com.ydly.rankingalarm2.base.BaseViewModel
-import com.ydly.rankingalarm2.data.local.alarm.AlarmData
+import com.ydly.rankingalarm2.data.local.alarm.model.AlarmData
 import com.ydly.rankingalarm2.util.DateTimeUtilMillisToUnits
 import org.jetbrains.anko.info
 import java.util.*
 
 class AlarmItemViewModel : BaseViewModel() {
 
-    private var alarmData: AlarmData = AlarmData(id = 0, timeInMillis = 0, isToggledOn = false)
+    private var alarmData: AlarmData =
+        AlarmData(id = 0, timeInMillis = 0, isToggledOn = false)
     private lateinit var alarmItemListener: AlarmListAdapter.AlarmItemListener
 
     // 1-way DataBinding

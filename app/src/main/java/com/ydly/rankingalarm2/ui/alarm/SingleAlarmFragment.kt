@@ -17,19 +17,19 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.core.app.AlarmManagerCompat
 import com.google.android.gms.ads.AdRequest
+import com.ydly.rankingalarm2.BuildConfig
 import com.ydly.rankingalarm2.R
 import com.ydly.rankingalarm2.base.BaseFragment
-import com.ydly.rankingalarm2.data.local.alarm.AlarmData
+import com.ydly.rankingalarm2.data.local.alarm.model.AlarmData
 import com.ydly.rankingalarm2.receiver.AlarmReceiver
 import com.ydly.rankingalarm2.util.ParcelableUtil
 import com.ydly.rankingalarm2.util.SingleEvent
-import kotlinx.android.synthetic.main.activity_ring_alarm.*
 import org.jetbrains.anko.info
-import kotlin.random.Random
 
 class SingleAlarmFragment : BaseFragment() {
 
     companion object {
+        @JvmStatic
         fun newInstance() = SingleAlarmFragment()
     }
 
@@ -48,7 +48,12 @@ class SingleAlarmFragment : BaseFragment() {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_single_alarm, container, false)
         binding.viewModel = viewModel
 
-        val adRequest = AdRequest.Builder().build()
+        val adRequestBuilder = AdRequest.Builder()
+        if(BuildConfig.DEBUG) {
+            adRequestBuilder.addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
+        }
+        val adRequest = adRequestBuilder.build()
+
         binding.singleAlarmFragAdView.loadAd(adRequest)
     }
 

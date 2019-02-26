@@ -1,18 +1,13 @@
 package com.ydly.rankingalarm2.ui
 
-import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import com.ydly.rankingalarm2.ui.alarm.AlarmFragment
 import com.ydly.rankingalarm2.R
-import com.ydly.rankingalarm2.ui.ranking.RankingFragment
 import kotlinx.android.synthetic.main.activity_main.*
 import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.info
 
-class MainActivity : AppCompatActivity(), AnkoLogger,
-    RankingFragment.OnFragmentInteractionListener {
+class MainActivity : AppCompatActivity(), AnkoLogger {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,7 +23,6 @@ class MainActivity : AppCompatActivity(), AnkoLogger,
         val pagerAdapter = MainPagerAdapter(supportFragmentManager, this)
         viewpager_main.adapter = pagerAdapter
         tabs_main.setupWithViewPager(viewpager_main)
-
     }
 
     override fun onResume() {
@@ -52,9 +46,5 @@ class MainActivity : AppCompatActivity(), AnkoLogger,
         } else {
             viewpager_main.currentItem = viewpager_main.currentItem - 1
         }
-    }
-
-    override fun onRankingInteraction(uri: Uri) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 }

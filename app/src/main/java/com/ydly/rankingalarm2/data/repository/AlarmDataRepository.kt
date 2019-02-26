@@ -1,8 +1,8 @@
 package com.ydly.rankingalarm2.data.repository
 
 import com.ydly.rankingalarm2.base.BaseRepository
-import com.ydly.rankingalarm2.data.local.alarm.AlarmData
-import com.ydly.rankingalarm2.data.local.alarm.AlarmDataDao
+import com.ydly.rankingalarm2.data.local.alarm.model.AlarmData
+import com.ydly.rankingalarm2.data.local.alarm.dao.AlarmDataDao
 import io.reactivex.Flowable
 import org.jetbrains.anko.info
 import javax.inject.Inject
@@ -28,7 +28,10 @@ class AlarmDataRepository : BaseRepository() {
     }
 
     private fun _insertNewAlarm(timeInMillis: Long, isToggledOn: Boolean): AlarmData {
-        val alarmData = AlarmData(timeInMillis = timeInMillis, isToggledOn = isToggledOn)
+        val alarmData = AlarmData(
+            timeInMillis = timeInMillis,
+            isToggledOn = isToggledOn
+        )
         // If new item, then insertId and if existing, then -1
         val insertId: Long = alarmDataDao.insert(alarmData)
         info("Alarm Set: $alarmData, insertId: $insertId")

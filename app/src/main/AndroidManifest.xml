@@ -26,7 +26,7 @@
 
         <activity android:name=".ui.alarm.RingAlarmActivity">
         </activity>
-        <activity android:name=".ui.alarm.EditAlarmActivity">
+        <activity android:name=".ui.alarm.unused.EditAlarmActivity">
         </activity>
 
         <service
@@ -61,7 +61,7 @@
                 android:exported="false">
         </service>
 
-        <activity android:name=".ui.alarm.CreateAlarmActivity">
+        <activity android:name=".ui.alarm.unused.CreateAlarmActivity">
         </activity>
         <activity android:name=".ui.MainActivity">
             <intent-filter>

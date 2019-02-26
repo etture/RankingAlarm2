@@ -1,8 +1,9 @@
-package com.ydly.rankingalarm2.data.local.alarm
+package com.ydly.rankingalarm2.data.local.alarm.dao
 
 import androidx.room.*
 import androidx.room.OnConflictStrategy.IGNORE
 import androidx.room.OnConflictStrategy.REPLACE
+import com.ydly.rankingalarm2.data.local.alarm.model.AlarmHistoryData
 import io.reactivex.Flowable
 
 @Dao

@@ -1,7 +1,7 @@
 package com.ydly.rankingalarm2.util
 
 import androidx.recyclerview.widget.DiffUtil
-import com.ydly.rankingalarm2.data.local.alarm.AlarmData
+import com.ydly.rankingalarm2.data.local.alarm.model.AlarmData
 
 class AlarmDiffCallback(
     private val oldList: List<AlarmData>,

@@ -1,4 +1,4 @@
-package com.ydly.rankingalarm2.ui.alarm
+package com.ydly.rankingalarm2.ui.alarm.unused
 
 import android.app.AlarmManager
 import android.app.PendingIntent
@@ -27,6 +27,11 @@ import com.ydly.rankingalarm2.util.EDIT_ALARM_ACTIVITY
 import org.jetbrains.anko.info
 
 class AlarmFragment : BaseFragment() {
+
+    companion object {
+        @JvmStatic
+        fun newInstance() = AlarmFragment()
+    }
 
     private lateinit var viewModel: AlarmViewModel
     private lateinit var binding: com.ydly.rankingalarm2.databinding.FragmentAlarmBinding
@@ -120,7 +125,12 @@ class AlarmFragment : BaseFragment() {
                 // Set AlarmManager with PendingIntent at the specified time
                 // For exact time-setting, vary functions based on API version
                 // AlarmManagerCompat takes care of API versions
-                AlarmManagerCompat.setExactAndAllowWhileIdle(alarmManager, AlarmManager.RTC_WAKEUP, alarmTime, pendingIntent)
+                AlarmManagerCompat.setExactAndAllowWhileIdle(
+                    alarmManager,
+                    AlarmManager.RTC_WAKEUP,
+                    alarmTime,
+                    pendingIntent
+                )
 
             }
         })
@@ -208,10 +218,4 @@ class AlarmFragment : BaseFragment() {
         activity?.unregisterReceiver(minuteTickReceiver)
         LocalBroadcastManager.getInstance(activity!!).unregisterReceiver(dateUpdatedToNextReceiver)
     }
-
-    companion object {
-        @JvmStatic
-        fun newInstance() = AlarmFragment()
-    }
-
 }

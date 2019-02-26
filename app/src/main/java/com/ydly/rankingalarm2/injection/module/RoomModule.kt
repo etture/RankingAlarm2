@@ -3,8 +3,8 @@ package com.ydly.rankingalarm2.injection.module
 import androidx.room.Room
 import android.content.Context
 import com.ydly.rankingalarm2.data.local.*
-import com.ydly.rankingalarm2.data.local.alarm.AlarmDataDao
-import com.ydly.rankingalarm2.data.local.alarm.AlarmHistoryDao
+import com.ydly.rankingalarm2.data.local.alarm.dao.AlarmDataDao
+import com.ydly.rankingalarm2.data.local.alarm.dao.AlarmHistoryDao
 import com.ydly.rankingalarm2.injection.scope.RepositoryScope
 import dagger.Module
 import dagger.Provides

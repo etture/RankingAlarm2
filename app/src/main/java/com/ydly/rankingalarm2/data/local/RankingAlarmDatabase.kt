@@ -2,10 +2,10 @@ package com.ydly.rankingalarm2.data.local
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
-import com.ydly.rankingalarm2.data.local.alarm.AlarmData
-import com.ydly.rankingalarm2.data.local.alarm.AlarmDataDao
-import com.ydly.rankingalarm2.data.local.alarm.AlarmHistoryDao
-import com.ydly.rankingalarm2.data.local.alarm.AlarmHistoryData
+import com.ydly.rankingalarm2.data.local.alarm.model.AlarmData
+import com.ydly.rankingalarm2.data.local.alarm.dao.AlarmDataDao
+import com.ydly.rankingalarm2.data.local.alarm.dao.AlarmHistoryDao
+import com.ydly.rankingalarm2.data.local.alarm.model.AlarmHistoryData
 
 @Database(entities = [AlarmData::class, AlarmHistoryData::class], version = 6, exportSchema = true)
 abstract class RankingAlarmDatabase : RoomDatabase() {

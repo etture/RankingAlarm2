@@ -1,24 +1,16 @@
 package com.ydly.rankingalarm2.data.repository
 
-import android.content.SharedPreferences
 import com.ydly.rankingalarm2.base.BaseRepository
-import com.ydly.rankingalarm2.data.local.alarm.AlarmHistoryDao
-import com.ydly.rankingalarm2.data.local.alarm.AlarmHistoryData
-import com.ydly.rankingalarm2.data.remote.AlarmHistoryBody
+import com.ydly.rankingalarm2.data.local.alarm.dao.AlarmHistoryDao
+import com.ydly.rankingalarm2.data.local.alarm.model.AlarmHistoryData
+import com.ydly.rankingalarm2.data.remote.model.request.AlarmHistoryBody
 import com.ydly.rankingalarm2.data.remote.AlarmRetrofitService
-import com.ydly.rankingalarm2.data.remote.SampleResponse
-import com.ydly.rankingalarm2.util.ConnectivityInterceptor
+import com.ydly.rankingalarm2.data.remote.model.response.SampleResponse
+import com.ydly.rankingalarm2.data.remote.model.response.UploadResponse
 import io.reactivex.Flowable
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.rxkotlin.plusAssign
-import io.reactivex.rxkotlin.subscribeBy
-import io.reactivex.rxkotlin.zipWith
-import io.reactivex.schedulers.Schedulers
 import org.jetbrains.anko.info
 import retrofit2.Response
-import java.net.SocketTimeoutException
 import java.util.*
-import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 class AlarmHistoryRepository : BaseRepository() {
@@ -85,7 +77,7 @@ class AlarmHistoryRepository : BaseRepository() {
         return insertId
     }
 
-    private fun _uploadAlarmHistory(alarmHistoryBody: AlarmHistoryBody): Flowable<Response<SampleResponse>> {
+    private fun _uploadAlarmHistory(alarmHistoryBody: AlarmHistoryBody): Flowable<Response<UploadResponse>> {
         // Send via POST to server
         return alarmRetrofitService.uploadAlarmHistory(alarmHistoryBody)
     }
@@ -101,7 +93,7 @@ class AlarmHistoryRepository : BaseRepository() {
         return _insertAlarmHistory(alarmTimeInMillis, takenTimeInMillis, hour, minute, wokeUp)
     }
 
-    fun uploadAlarmHistory(alarmHistoryBody: AlarmHistoryBody): Flowable<Response<SampleResponse>> {
+    fun uploadAlarmHistory(alarmHistoryBody: AlarmHistoryBody): Flowable<Response<UploadResponse>> {
         return _uploadAlarmHistory(alarmHistoryBody)
     }
 
@@ -112,6 +104,10 @@ class AlarmHistoryRepository : BaseRepository() {
 
     fun getToday(year: Int, month: Int, dayOfMonth: Int): Flowable<List<AlarmHistoryData>> {
         return _getToday(year, month, dayOfMonth)
+    }
+
+    fun deleteAllLocal() {
+        alarmHistoryDao.deleteAll()
     }
 
 }

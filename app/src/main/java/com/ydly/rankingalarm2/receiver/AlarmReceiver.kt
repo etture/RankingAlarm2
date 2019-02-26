@@ -2,9 +2,7 @@ package com.ydly.rankingalarm2.receiver
 
 import android.content.Context
 import android.content.Intent
-import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.ydly.rankingalarm2.base.BaseReceiver
-import com.ydly.rankingalarm2.data.local.alarm.AlarmData
 import com.ydly.rankingalarm2.service.RingAlarmService
 import com.ydly.rankingalarm2.ui.alarm.RingAlarmActivity
 import com.ydly.rankingalarm2.util.ParcelableCreator

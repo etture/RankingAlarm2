@@ -1,4 +1,4 @@
-package com.ydly.rankingalarm2.ui.alarm
+package com.ydly.rankingalarm2.ui.alarm.unused
 
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.SortedList
@@ -7,11 +7,10 @@ import androidx.recyclerview.widget.SortedListAdapterCallback
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.ydly.rankingalarm2.R
-import com.ydly.rankingalarm2.data.local.alarm.AlarmData
+import com.ydly.rankingalarm2.data.local.alarm.model.AlarmData
 import com.ydly.rankingalarm2.databinding.ItemAlarmBinding
 import com.ydly.rankingalarm2.util.DateTimeUtilMillisToUnits
 import org.jetbrains.anko.AnkoLogger
-import org.jetbrains.anko.debug
 import org.jetbrains.anko.info
 
 class AlarmListAdapter(private val listener: AlarmItemListener) :

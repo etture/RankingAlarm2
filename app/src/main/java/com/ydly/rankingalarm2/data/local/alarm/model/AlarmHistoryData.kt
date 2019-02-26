@@ -1,4 +1,4 @@
-package com.ydly.rankingalarm2.data.local.alarm
+package com.ydly.rankingalarm2.data.local.alarm.model
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity

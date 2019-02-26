@@ -5,9 +5,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.google.gson.Gson
 import com.ydly.rankingalarm2.base.BaseViewModel
-import com.ydly.rankingalarm2.data.local.alarm.AlarmData
-import com.ydly.rankingalarm2.data.remote.AlarmHistoryBody
-import com.ydly.rankingalarm2.data.remote.ErrorResponse
+import com.ydly.rankingalarm2.data.local.alarm.model.AlarmData
+import com.ydly.rankingalarm2.data.remote.model.request.AlarmHistoryBody
+import com.ydly.rankingalarm2.data.remote.model.response.ErrorResponse
 import com.ydly.rankingalarm2.data.repository.AlarmDataRepository
 import com.ydly.rankingalarm2.data.repository.AlarmHistoryRepository
 import com.ydly.rankingalarm2.util.ConnectivityInterceptor
@@ -95,13 +95,12 @@ class RingAlarmViewModel : BaseViewModel() {
                     // Get insertId from inserting into local DB
                     // insertId == 1 means alarm has already been stored locally for today
                     // Send info to SERVER if insertId is not -1
-                    if (insertId > 0) {
+                    if (insertId > 0 && wokeUp) {
 
                         // TODO Create alarmHistoryBody
                         val alarmHistoryBody = createAlarmHistoryBody(
                             alarmTimeInMillis = alarmData.timeInMillis,
-                            wokeUp = wokeUp,
-                            takenTimeInMillis = takenTimeInMillis,
+                            takenTimeInMillis = takenTimeInMillis!!,
                             hour = hour,
                             minute = minute
                         )
@@ -135,7 +134,8 @@ class RingAlarmViewModel : BaseViewModel() {
                                 onNext = { response ->
                                     if (response.isSuccessful) {
                                         val message = response.body()?.message
-                                        info("uploadAlarmHistory() -> message: $message")
+                                        val rankingInTimeZone = response.body()?.dayRank
+                                        info("uploadAlarmHistory() -> message: $message, dayRank: $rankingInTimeZone")
                                     } else {
                                         val statusCode = response.code()
                                         val jsonErrorObj = JSONObject(response.errorBody()?.string())
@@ -175,8 +175,7 @@ class RingAlarmViewModel : BaseViewModel() {
 
     private fun createAlarmHistoryBody(
         alarmTimeInMillis: Long,
-        takenTimeInMillis: Long?,
-        wokeUp: Boolean,
+        takenTimeInMillis: Long,
         hour: Int,
         minute: Int
     ): AlarmHistoryBody {
@@ -209,8 +208,7 @@ class RingAlarmViewModel : BaseViewModel() {
             timeZoneId = timeZoneId,
             baseTimeInMillis = baseTimeInMillis,
             alarmTimeInMillis = alarmTimeInMillis,
-            takenTimeInMillis = takenTimeInMillis,
-            wokeUp = wokeUp
+            takenTimeInMillis = takenTimeInMillis
         )
     }
 

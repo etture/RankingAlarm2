@@ -1,4 +1,4 @@
-package com.ydly.rankingalarm2.ui.alarm
+package com.ydly.rankingalarm2.ui.alarm.unused
 
 import android.app.DatePickerDialog
 import androidx.lifecycle.Observer

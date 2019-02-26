@@ -1,4 +1,4 @@
-package com.ydly.rankingalarm2.ui.alarm
+package com.ydly.rankingalarm2.ui.alarm.unused
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData

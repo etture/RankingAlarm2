@@ -3,13 +3,13 @@
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
         xmlns:app="http://schemas.android.com/apk/res-auto"
-        tools:context=".ui.alarm.CreateAlarmActivity"
+        tools:context=".ui.alarm.unused.CreateAlarmActivity"
         >
 
     <data>
         <variable
                 name="viewModel"
-                type="com.ydly.rankingalarm2.ui.alarm.CreateAlarmViewModel"
+                type="com.ydly.rankingalarm2.ui.alarm.unused.CreateAlarmViewModel"
                 />
     </data>
 

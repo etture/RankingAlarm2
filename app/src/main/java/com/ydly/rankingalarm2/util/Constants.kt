@@ -1,7 +1,6 @@
 package com.ydly.rankingalarm2.util
 
 const val BASE_URL = "http://192.168.43.57:3016/api/"
-// TODO create server for Retrofit interaction
 
 const val CREATE_ALARM_ACTIVITY = 21
 const val EDIT_ALARM_ACTIVITY = 23

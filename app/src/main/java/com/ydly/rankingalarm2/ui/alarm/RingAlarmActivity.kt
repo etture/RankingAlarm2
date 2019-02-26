@@ -15,7 +15,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProviders
 import com.ydly.rankingalarm2.R
 import com.ydly.rankingalarm2.base.BaseActivity
-import com.ydly.rankingalarm2.data.local.alarm.AlarmData
+import com.ydly.rankingalarm2.data.local.alarm.model.AlarmData
 import com.ydly.rankingalarm2.util.SLEPT_IN
 import com.ydly.rankingalarm2.util.WOKE_UP
 
@@ -28,9 +28,10 @@ class RingAlarmActivity : BaseActivity() {
     private val pm by lazy { getSystemService(Context.POWER_SERVICE) as PowerManager }
     private val wl by lazy {
         pm.newWakeLock(
-        PowerManager.ACQUIRE_CAUSES_WAKEUP or
-                WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON,
-        this.loggerTag)
+            PowerManager.ACQUIRE_CAUSES_WAKEUP or
+                    WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON,
+            this.loggerTag
+        )
     }
 
     // Receiver for getting screen-off action
@@ -46,7 +47,7 @@ class RingAlarmActivity : BaseActivity() {
             viewModel.updateTimeInMillis(elapsedTime)
 
             // Finish Activity if 5 minutes have passed
-            if(elapsedTime > 300000) {
+            if (elapsedTime > 300000) {
                 viewModel.setNewAlarmHistory(SLEPT_IN)
                 releaseWakeLock()
                 finish()
@@ -67,7 +68,8 @@ class RingAlarmActivity : BaseActivity() {
                     WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON or
                     WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD or
                     WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED or
-                    WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON)
+                    WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON
+        )
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_ring_alarm)
         binding.viewModel = viewModel
@@ -87,7 +89,7 @@ class RingAlarmActivity : BaseActivity() {
 
         binding.redBtn.setOnTouchListener { view, motionEvent ->
             val redBtn = view as ImageView
-            when(motionEvent.action) {
+            when (motionEvent.action) {
                 MotionEvent.ACTION_DOWN -> {
                     redBtn.setImageResource(R.drawable.red_btn_pressed_medium)
                     handler.removeCallbacks(stopwatch)
@@ -111,7 +113,7 @@ class RingAlarmActivity : BaseActivity() {
         screenStatusReceiver = object : BroadcastReceiver() {
             override fun onReceive(context: Context?, intent: Intent?) {
                 val action = intent?.action
-                when(action) {
+                when (action) {
                     Intent.ACTION_SCREEN_OFF -> {
                         // Insert new AlarmHistoryData with elapsedTime and SLEPT_IN status
                         viewModel.setNewAlarmHistory(SLEPT_IN)
@@ -130,6 +132,8 @@ class RingAlarmActivity : BaseActivity() {
 
     override fun onBackPressed() {
         super.onBackPressed()
+        // Insert new AlarmHistoryData with elapsedTime and SLEPT_IN status
+        viewModel.setNewAlarmHistory(SLEPT_IN)
 
         releaseWakeLock()
         finish()
@@ -146,6 +150,6 @@ class RingAlarmActivity : BaseActivity() {
 
     private fun releaseWakeLock() {
         // Release WakeLock
-        if(wl.isHeld) wl.release()
+        if (wl.isHeld) wl.release()
     }
 }

@@ -3,6 +3,11 @@ package com.ydly.rankingalarm2.base
 import androidx.lifecycle.ViewModel
 import android.content.Intent
 import com.ydly.rankingalarm2.ui.alarm.*
+import com.ydly.rankingalarm2.ui.alarm.unused.AlarmItemViewModel
+import com.ydly.rankingalarm2.ui.alarm.unused.AlarmViewModel
+import com.ydly.rankingalarm2.ui.alarm.unused.CreateAlarmViewModel
+import com.ydly.rankingalarm2.ui.alarm.unused.EditAlarmViewModel
+import com.ydly.rankingalarm2.ui.ranking.RankingViewModel
 import com.ydly.rankingalarm2.util.ResourceProvider
 import io.reactivex.disposables.CompositeDisposable
 import org.jetbrains.anko.AnkoLogger
@@ -29,6 +34,7 @@ abstract class BaseViewModel : ViewModel(), AnkoLogger {
             is EditAlarmViewModel -> injector?.inject(this)
             is SingleAlarmViewModel -> injector?.inject(this)
             is RingAlarmViewModel -> injector?.inject(this)
+            is RankingViewModel -> injector?.inject(this)
         }
     }
 

@@ -5,8 +5,9 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.ydly.rankingalarm2.receiver.DateChangeReceiver
-import com.ydly.rankingalarm2.ui.alarm.AlarmFragment
+import com.ydly.rankingalarm2.ui.alarm.unused.AlarmFragment
 import com.ydly.rankingalarm2.ui.alarm.SingleAlarmFragment
+import com.ydly.rankingalarm2.ui.ranking.RankingFragment
 import io.reactivex.disposables.CompositeDisposable
 import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.info
@@ -33,6 +34,7 @@ abstract class BaseFragment: Fragment(), AnkoLogger {
         when(this) {
             is AlarmFragment -> injector?.inject(this)
             is SingleAlarmFragment -> injector?.inject(this)
+            is RankingFragment -> injector?.inject(this)
         }
     }
 

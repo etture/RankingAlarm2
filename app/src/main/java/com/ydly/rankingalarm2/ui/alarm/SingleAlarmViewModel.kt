@@ -7,7 +7,7 @@ import android.view.View
 import android.widget.ToggleButton
 import com.ydly.rankingalarm2.R
 import com.ydly.rankingalarm2.base.BaseViewModel
-import com.ydly.rankingalarm2.data.local.alarm.AlarmData
+import com.ydly.rankingalarm2.data.local.alarm.model.AlarmData
 import com.ydly.rankingalarm2.data.repository.AlarmDataRepository
 import com.ydly.rankingalarm2.data.repository.AlarmHistoryRepository
 import com.ydly.rankingalarm2.util.*

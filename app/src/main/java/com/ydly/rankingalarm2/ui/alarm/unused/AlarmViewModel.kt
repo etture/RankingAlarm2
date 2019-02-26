@@ -1,4 +1,4 @@
-package com.ydly.rankingalarm2.ui.alarm
+package com.ydly.rankingalarm2.ui.alarm.unused
 
 import android.app.Activity.RESULT_OK
 import androidx.lifecycle.LiveData
@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.SortedList
 import android.view.View
 import com.ydly.rankingalarm2.R
 import com.ydly.rankingalarm2.base.BaseViewModel
-import com.ydly.rankingalarm2.data.local.alarm.AlarmData
+import com.ydly.rankingalarm2.data.local.alarm.model.AlarmData
 import com.ydly.rankingalarm2.data.repository.AlarmDataRepository
 import com.ydly.rankingalarm2.util.*
 import io.reactivex.Flowable
@@ -41,7 +41,8 @@ class AlarmViewModel : BaseViewModel() {
     // Toast event to be observed for showing toasts on View
     private val newToast: MutableLiveData<SingleEvent<String>> = MutableLiveData()
 
-    private val alarmListOnClickListener = object : AlarmListAdapter.AlarmItemListener {
+    private val alarmListOnClickListener = object :
+        AlarmListAdapter.AlarmItemListener {
         override fun onAlarmItemClick(alarmItem: AlarmData) {
             onListItemClick(alarmItem)
         }

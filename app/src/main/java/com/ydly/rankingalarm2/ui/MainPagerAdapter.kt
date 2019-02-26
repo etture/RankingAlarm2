@@ -5,7 +5,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
 import com.ydly.rankingalarm2.R
-import com.ydly.rankingalarm2.ui.alarm.AlarmFragment
 import com.ydly.rankingalarm2.ui.alarm.SingleAlarmFragment
 import com.ydly.rankingalarm2.ui.ranking.RankingFragment
 

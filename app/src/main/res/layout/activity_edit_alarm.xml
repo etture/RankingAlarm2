@@ -3,13 +3,13 @@
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
         xmlns:app="http://schemas.android.com/apk/res-auto"
-        tools:context=".ui.alarm.EditAlarmActivity"
+        tools:context=".ui.alarm.unused.EditAlarmActivity"
         >
 
     <data>
         <variable
                 name="viewModel"
-                type="com.ydly.rankingalarm2.ui.alarm.EditAlarmViewModel"
+                type="com.ydly.rankingalarm2.ui.alarm.unused.EditAlarmViewModel"
                 />
     </data>
 
