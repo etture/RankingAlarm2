@@ -21,6 +21,11 @@ interface AlarmHistoryDao {
     @Update(onConflict = REPLACE)
     fun update(alarmHistory: AlarmHistoryData)
 
+    @Query("UPDATE alarmHistoryData SET dayRank = :dayRank AND morningRank = :morningRank WHERE id = :originalId")
+    fun updateRank(originalId: Long, dayRank: Int, morningRank: Int)
+
+
+
     @Query("DELETE FROM alarmHistoryData")
     fun deleteAll()
 

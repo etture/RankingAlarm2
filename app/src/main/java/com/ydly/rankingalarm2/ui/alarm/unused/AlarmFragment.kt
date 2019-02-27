@@ -22,9 +22,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.ydly.rankingalarm2.R
 import com.ydly.rankingalarm2.base.BaseFragment
 import com.ydly.rankingalarm2.receiver.AlarmReceiver
+import com.ydly.rankingalarm2.receiver.DateChangeReceiver
 import com.ydly.rankingalarm2.util.CREATE_ALARM_ACTIVITY
 import com.ydly.rankingalarm2.util.EDIT_ALARM_ACTIVITY
 import org.jetbrains.anko.info
+import javax.inject.Inject
 
 class AlarmFragment : BaseFragment() {
 
@@ -32,6 +34,9 @@ class AlarmFragment : BaseFragment() {
         @JvmStatic
         fun newInstance() = AlarmFragment()
     }
+
+    @Inject
+    lateinit var minuteTickReceiver: DateChangeReceiver
 
     private lateinit var viewModel: AlarmViewModel
     private lateinit var binding: com.ydly.rankingalarm2.databinding.FragmentAlarmBinding

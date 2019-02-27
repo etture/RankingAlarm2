@@ -82,6 +82,10 @@ class AlarmHistoryRepository : BaseRepository() {
         return alarmRetrofitService.uploadAlarmHistory(alarmHistoryBody)
     }
 
+    private fun _updateRank(originalId: Long, dayRank: Int, morningRank: Int) {
+        alarmHistoryDao.updateRank(originalId, dayRank, morningRank)
+    }
+
     private fun _getToday(year: Int, month: Int, dayOfMonth: Int): Flowable<List<AlarmHistoryData>> {
         return alarmHistoryDao.getToday(year, month, dayOfMonth)
     }
@@ -95,6 +99,10 @@ class AlarmHistoryRepository : BaseRepository() {
 
     fun uploadAlarmHistory(alarmHistoryBody: AlarmHistoryBody): Flowable<Response<UploadResponse>> {
         return _uploadAlarmHistory(alarmHistoryBody)
+    }
+
+    fun updateRank(originalId: Long, dayRank: Int, morningRank: Int) {
+        _updateRank(originalId, dayRank, morningRank)
     }
 
     fun testHeader(): Flowable<SampleResponse> {

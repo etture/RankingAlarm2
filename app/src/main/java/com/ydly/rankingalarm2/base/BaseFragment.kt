@@ -18,9 +18,6 @@ abstract class BaseFragment: Fragment(), AnkoLogger {
     private val injector = BaseApplication.getViewInjector()
 
     @Inject
-    lateinit var minuteTickReceiver: DateChangeReceiver
-
-    @Inject
     lateinit var alarmManager: AlarmManager
 
     val subscription = CompositeDisposable()

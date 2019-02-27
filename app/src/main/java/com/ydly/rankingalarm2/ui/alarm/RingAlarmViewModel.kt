@@ -99,6 +99,7 @@ class RingAlarmViewModel : BaseViewModel() {
 
                         // Create alarmHistoryBody
                         val alarmHistoryBody = createAlarmHistoryBody(
+                            idInDevice = insertId,
                             alarmTimeInMillis = alarmData.timeInMillis,
                             takenTimeInMillis = takenTimeInMillis!!,
                             hour = hour,
@@ -135,9 +136,28 @@ class RingAlarmViewModel : BaseViewModel() {
                                     if (response.isSuccessful) {
 
                                         val message = response.body()?.message
+                                        val originalId = response.body()?.originalId
                                         val dayRank = response.body()?.dayRank
                                         val morningRank = response.body()?.morningRank
-                                        info("uploadAlarmHistory() -> message: $message, dayRank: $dayRank, morningRank: $morningRank")
+                                        info("uploadAlarmHistory() -> message: $message, originalId: $originalId, dayRank: $dayRank, morningRank: $morningRank")
+                                        // Update alarmHistory with ranks
+                                        Flowable.fromCallable {
+                                            alarmHistoryRepo.updateRank(
+                                                originalId!!,
+                                                dayRank!!,
+                                                morningRank!!
+                                            )
+                                        }
+                                            .subscribeOn(Schedulers.io())
+                                            .observeOn(AndroidSchedulers.mainThread())
+                                            .subscribeBy(
+                                                onNext = {
+                                                    info("updateRank() -> Ranks updated properly")
+                                                },
+                                                onError = { error ->
+                                                    info("updateRank() -> error: $error")
+                                                }
+                                            )
 
                                     } else {
 
@@ -179,6 +199,7 @@ class RingAlarmViewModel : BaseViewModel() {
     }
 
     private fun createAlarmHistoryBody(
+        idInDevice: Long,
         alarmTimeInMillis: Long,
         takenTimeInMillis: Long,
         hour: Int,
@@ -204,6 +225,7 @@ class RingAlarmViewModel : BaseViewModel() {
 
         val uuid: String = mainPrefs.getString("installation_uuid", null)!!
         return AlarmHistoryBody(
+            idInDevice = idInDevice,
             userUUID = uuid,
             year = year,
             month = month,

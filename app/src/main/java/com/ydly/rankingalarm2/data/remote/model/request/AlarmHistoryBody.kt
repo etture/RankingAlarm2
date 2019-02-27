@@ -4,6 +4,7 @@ import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 
 data class AlarmHistoryBody (
+    @SerializedName("idInDevice") @Expose val idInDevice: Long,
     @SerializedName("userUUID") @Expose val userUUID: String,
     @SerializedName("year") @Expose val year: Int,
     @SerializedName("month") @Expose val month: Int,
