@@ -3,9 +3,12 @@ package com.ydly.rankingalarm2.ui.alarm
 import android.annotation.SuppressLint
 import android.app.AlarmManager
 import android.app.PendingIntent
+import android.content.BroadcastReceiver
+import android.content.Context
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import android.content.Intent
+import android.content.IntentFilter
 import androidx.databinding.DataBindingUtil
 import android.os.Build
 import android.os.Bundle
@@ -16,15 +19,18 @@ import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
 import androidx.core.app.AlarmManagerCompat
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.google.android.gms.ads.AdRequest
 import com.ydly.rankingalarm2.BuildConfig
 import com.ydly.rankingalarm2.R
 import com.ydly.rankingalarm2.base.BaseFragment
 import com.ydly.rankingalarm2.data.local.alarm.model.AlarmData
 import com.ydly.rankingalarm2.receiver.AlarmReceiver
+import com.ydly.rankingalarm2.util.ACTION_ALARM_TURNED_OFF
 import com.ydly.rankingalarm2.util.ParcelableUtil
 import com.ydly.rankingalarm2.util.SingleEvent
 import org.jetbrains.anko.info
+import javax.inject.Inject
 
 class SingleAlarmFragment : BaseFragment() {
 
@@ -33,7 +39,12 @@ class SingleAlarmFragment : BaseFragment() {
         fun newInstance() = SingleAlarmFragment()
     }
 
-    private val viewModel: SingleAlarmViewModel by lazy { ViewModelProviders.of(activity!!).get(SingleAlarmViewModel::class.java) }
+    @Inject
+    lateinit var localBroadcastManager: LocalBroadcastManager
+
+    private val viewModel: SingleAlarmViewModel by lazy {
+        ViewModelProviders.of(activity!!).get(SingleAlarmViewModel::class.java)
+    }
     private lateinit var binding: com.ydly.rankingalarm2.databinding.FragmentSingleAlarmBinding
 
     private lateinit var newToastObserver: Observer<SingleEvent<String>>
@@ -43,18 +54,32 @@ class SingleAlarmFragment : BaseFragment() {
     private lateinit var activateEventObserver: Observer<SingleEvent<AlarmData>>
     private lateinit var deactivateEventObserver: Observer<SingleEvent<AlarmData>>
 
+    private lateinit var alarmFinishedReceiver: BroadcastReceiver
+
     override fun initialize(inflater: LayoutInflater, container: ViewGroup?) {
         // ViewModel and DataBinding setup
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_single_alarm, container, false)
         binding.viewModel = viewModel
 
         val adRequestBuilder = AdRequest.Builder()
-        if(BuildConfig.DEBUG) {
+        if (BuildConfig.DEBUG) {
             adRequestBuilder.addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
         }
         val adRequest = adRequestBuilder.build()
 
         binding.singleAlarmFragAdView.loadAd(adRequest)
+
+        // Receiver to be triggered when the alarm is turned off
+        alarmFinishedReceiver = object : BroadcastReceiver() {
+            override fun onReceive(context: Context?, intent: Intent?) {
+                val action = intent?.action
+                if (action == ACTION_ALARM_TURNED_OFF) {
+                    info("alarmFinishedReceiver -> alarm turned off")
+                    // DO SOMETHING HERE if necessary (like setting tomorrow's alarm automatically)
+                }
+            }
+        }
+        localBroadcastManager.registerReceiver(alarmFinishedReceiver, IntentFilter(ACTION_ALARM_TURNED_OFF))
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -215,6 +240,7 @@ class SingleAlarmFragment : BaseFragment() {
         super.onDestroyView()
         info("onDestroyView()")
         viewModel.clearSubscription()
+        localBroadcastManager.unregisterReceiver(alarmFinishedReceiver)
     }
 
 }
