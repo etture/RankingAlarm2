@@ -21,3 +21,9 @@ const val TOMORROW = 63
 // Used in RingAlarmActivity and RingAlarmViewModel to indicate whether alarm was properly turned off or not
 const val WOKE_UP = true
 const val SLEPT_IN = false
+
+// Key used to get pendingAlarmHistoryJson from SharedPreferences
+const val PENDING_ALARM_HISTORY_JSON = "pendingAlarmHistoryJSON"
+
+// Action flag used for LocalBroadcastManager to indicate that RingAlarmActivity has been finish()-ed
+const val ACTION_ALARM_TURNED_OFF = "actionAlarmTurnedOff"

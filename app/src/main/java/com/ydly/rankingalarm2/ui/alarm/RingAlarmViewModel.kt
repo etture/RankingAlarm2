@@ -12,6 +12,8 @@ import com.ydly.rankingalarm2.data.repository.AlarmDataRepository
 import com.ydly.rankingalarm2.data.repository.AlarmHistoryRepository
 import com.ydly.rankingalarm2.util.ConnectivityInterceptor
 import com.ydly.rankingalarm2.util.DateTimeUtilMillisToUnits
+import com.ydly.rankingalarm2.util.PENDING_ALARM_HISTORY_JSON
+import com.ydly.rankingalarm2.util.extension.fromJson
 import io.reactivex.Flowable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.rxkotlin.plusAssign
@@ -177,8 +179,7 @@ class RingAlarmViewModel : BaseViewModel() {
                                                 info("uploadAlarmHistory() -> duplicate in server, no action done")
                                             }
                                             else -> {
-                                                val alarmHistoryJson = gson.toJson(alarmHistoryBody)
-                                                putToPrefs("pendingAlarmHistoryJSON", alarmHistoryJson)
+                                                putHistoryToPrefs(alarmHistoryBody)
                                                 info("uploadAlarmHistory() -> error other than duplicate, pending history saved")
                                             }
                                         }
@@ -189,8 +190,7 @@ class RingAlarmViewModel : BaseViewModel() {
                                     info("uploadAlarmHistory() -> error: $error")
 
                                     // In case of no-internet exception or when server is down
-                                    val alarmHistoryJson = gson.toJson(alarmHistoryBody)
-                                    putToPrefs("pendingAlarmHistoryJSON", alarmHistoryJson)
+                                    putHistoryToPrefs(alarmHistoryBody)
                                 }
                             )
                     }
@@ -244,10 +244,30 @@ class RingAlarmViewModel : BaseViewModel() {
         )
     }
 
-    private fun putToPrefs(key: String, value: String) {
-        val editor = mainPrefs.edit()
-        editor.putString(key, value)
-        editor.apply()
+    // Function to put JSON array (in String) of the pending alarmHistoryBody objects into mainPrefs
+    // If the mainPrefs is empty, get [] and insert the new pending history there
+    // If the mainPrefs already has some history items, then add to that list and save as JSON array
+    private fun putHistoryToPrefs(newHistoryBody: AlarmHistoryBody) {
+        val historyJsonArray = mainPrefs.getString(PENDING_ALARM_HISTORY_JSON, "[]")
+        info("historyJsonArray: $historyJsonArray")
+        val historyList: MutableList<AlarmHistoryBody> =
+            gson.fromJson<MutableList<AlarmHistoryBody>>(historyJsonArray!!)
+
+        historyList.add(newHistoryBody)
+        val historyListJson = gson.toJsonTree(historyList)
+
+        info("historyListJson: $historyListJson")
+        if (historyListJson.isJsonArray) {
+            val newHistoryJsonArray = historyListJson.asJsonArray
+
+            val editor = mainPrefs.edit()
+            editor.putString(PENDING_ALARM_HISTORY_JSON, newHistoryJsonArray.toString())
+            editor.apply()
+
+            info("new JSON array put into prefs: $newHistoryJsonArray")
+        } else {
+            info("historyListJson NOT a valid JsonArray")
+        }
     }
 
     //========= Functions accessible by View (data manipulation) ==========

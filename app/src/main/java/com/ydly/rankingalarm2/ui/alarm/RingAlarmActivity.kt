@@ -13,13 +13,19 @@ import android.view.WindowManager
 import android.widget.ImageView
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProviders
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.ydly.rankingalarm2.R
 import com.ydly.rankingalarm2.base.BaseActivity
 import com.ydly.rankingalarm2.data.local.alarm.model.AlarmData
+import com.ydly.rankingalarm2.util.ACTION_ALARM_TURNED_OFF
 import com.ydly.rankingalarm2.util.SLEPT_IN
 import com.ydly.rankingalarm2.util.WOKE_UP
+import javax.inject.Inject
 
 class RingAlarmActivity : BaseActivity() {
+
+    @Inject
+    lateinit var localBroadcastManager: LocalBroadcastManager
 
     private val viewModel by lazy { ViewModelProviders.of(this).get(RingAlarmViewModel::class.java) }
     private lateinit var binding: com.ydly.rankingalarm2.databinding.ActivityRingAlarmBinding
@@ -49,8 +55,7 @@ class RingAlarmActivity : BaseActivity() {
             // Finish Activity if 5 minutes have passed
             if (elapsedTime > 300000) {
                 viewModel.setNewAlarmHistory(SLEPT_IN)
-                releaseWakeLock()
-                finish()
+                finishAndSignalFinished()
             }
 
             handler.postDelayed(this, 10)
@@ -97,8 +102,7 @@ class RingAlarmActivity : BaseActivity() {
                     // Insert new AlarmHistoryData with elapsedTime and WOKE_UP status
                     viewModel.setNewAlarmHistory(WOKE_UP, elapsedTime)
 
-                    releaseWakeLock()
-                    finish()
+                    finishAndSignalFinished()
                     true
                 }
                 MotionEvent.ACTION_UP -> {
@@ -118,8 +122,7 @@ class RingAlarmActivity : BaseActivity() {
                         // Insert new AlarmHistoryData with elapsedTime and SLEPT_IN status
                         viewModel.setNewAlarmHistory(SLEPT_IN)
 
-                        releaseWakeLock()
-                        finish()
+                        finishAndSignalFinished()
                     }
                 }
             }
@@ -135,8 +138,7 @@ class RingAlarmActivity : BaseActivity() {
         // Insert new AlarmHistoryData with elapsedTime and SLEPT_IN status
         viewModel.setNewAlarmHistory(SLEPT_IN)
 
-        releaseWakeLock()
-        finish()
+        finishAndSignalFinished()
     }
 
     override fun onDestroy() {
@@ -151,5 +153,11 @@ class RingAlarmActivity : BaseActivity() {
     private fun releaseWakeLock() {
         // Release WakeLock
         if (wl.isHeld) wl.release()
+    }
+
+    private fun finishAndSignalFinished() {
+        releaseWakeLock()
+        localBroadcastManager.sendBroadcast(Intent(ACTION_ALARM_TURNED_OFF))
+        finish()
     }
 }

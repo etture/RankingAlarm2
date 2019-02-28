@@ -26,22 +26,20 @@ class RankingViewModel: BaseViewModel() {
 
     private val refreshEvent = MutableLiveData<SingleEvent<Boolean>>()
 
-    // MediatorLiveData for 2-way DataBinding on refreshEvent
-//    private val refreshingMediator = MediatorLiveData<Boolean>().apply {
-//        addSource(refreshEvent) { value ->
-//            setValue(value)
-//            info("refreshEvent status changed: ${refreshEvent.value}")
-//        }
-//    }.also { it.observeForever { /*Do nothing*/ } }
+    //========= Init and private functions (business logic) ==========
+
+
+
+    //========= Functions accessible by View (data manipulation) ==========
 
     fun swipeTest() {
         info("swipeTest()")
-        subscription += Flowable.timer(1, TimeUnit.SECONDS)
+        subscription += Flowable.timer(4, TimeUnit.SECONDS)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeBy(
                 onNext = {
-                    info("delayed 1 sec")
+                    info("delayed 4 sec")
                     refreshEvent.value = SingleEvent(false)
                 },
                 onError = {
@@ -70,6 +68,9 @@ class RankingViewModel: BaseViewModel() {
 
         info("New UUID: $uuid")
     }
+
+
+    //========= Functions accessible by View (DataBinding) ==========
 
     fun observeRefreshEvent(): LiveData<SingleEvent<Boolean>> = refreshEvent
 

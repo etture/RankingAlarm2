@@ -50,6 +50,9 @@ class RankingFragment : BaseFragment() {
         initialize(inflater, container)
         info("onCreateView()")
 
+        binding.rankFragSwipeRefresh.setColorSchemeResources(
+            R.color.colorAccent, R.color.colorCancel, R.color.colorConfirm, R.color.black
+        )
 
 
         return binding.root
@@ -76,9 +79,9 @@ class RankingFragment : BaseFragment() {
 
         activity?.registerReceiver(minuteTickReceiver, IntentFilter(Intent.ACTION_TIME_TICK))
 
+        // Observer to turn SwipeRefreshLayout back off
         refreshObserver = Observer {
             it?.getContentIfNotHandled()?.let { refreshStatus ->
-
                 binding.rankFragSwipeRefresh.isRefreshing = refreshStatus
             }
         }
@@ -96,20 +99,6 @@ class RankingFragment : BaseFragment() {
 
         viewModel.apply {
             observeRefreshEvent().removeObserver(refreshObserver)
-        }
-    }
-
-    inner class MinuteTickReceiver : BaseReceiver() {
-        override fun onReceive(context: Context?, intent: Intent?) {
-            val action = intent?.action
-            info("minuteTickReceiver -> onReceive()")
-            if (action == Intent.ACTION_TIME_TICK) {
-                val calendar = Calendar.getInstance()
-                val hour = calendar.get(Calendar.HOUR_OF_DAY)
-                val minute = calendar.get(Calendar.MINUTE)
-
-                info("minuteTickReceiver -> minute ticked -> hour: $hour, minute: $minute")
-            }
         }
     }
 }

@@ -4,6 +4,7 @@ import android.app.AlarmManager
 import android.content.Context
 import android.content.SharedPreferences
 import android.net.ConnectivityManager
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.ydly.rankingalarm2.receiver.DateChangeReceiver
@@ -28,6 +29,9 @@ class AppModule(private val context: Context) {
 
     @Provides
     fun provideConnectivityManager(ctx: Context): ConnectivityManager = ctx.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+
+    @Provides
+    fun provideLocalBroadcastManager(ctx: Context): LocalBroadcastManager = LocalBroadcastManager.getInstance(ctx)
 
     @Provides
     fun provideGson(): Gson = GsonBuilder().create()
