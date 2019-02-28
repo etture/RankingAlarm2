@@ -174,8 +174,12 @@ class RingAlarmViewModel : BaseViewModel() {
                                         // somewhere so it can be later sent to the server again when connection is reestablished
                                         when (statusCode) {
                                             409 -> {
+                                                info("uploadAlarmHistory() -> duplicate in server, no action done")
+                                            }
+                                            else -> {
                                                 val alarmHistoryJson = gson.toJson(alarmHistoryBody)
                                                 putToPrefs("pendingAlarmHistoryJSON", alarmHistoryJson)
+                                                info("uploadAlarmHistory() -> error other than duplicate, pending history saved")
                                             }
                                         }
 
@@ -184,6 +188,7 @@ class RingAlarmViewModel : BaseViewModel() {
                                 onError = { error ->
                                     info("uploadAlarmHistory() -> error: $error")
 
+                                    // In case of no-internet exception or when server is down
                                     val alarmHistoryJson = gson.toJson(alarmHistoryBody)
                                     putToPrefs("pendingAlarmHistoryJSON", alarmHistoryJson)
                                 }

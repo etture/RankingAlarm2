@@ -35,6 +35,8 @@ class MainActivity : AppCompatActivity(), AnkoLogger {
     override fun onResume() {
         super.onResume()
         info("onResume() called")
+
+
     }
 
     override fun onPause() {

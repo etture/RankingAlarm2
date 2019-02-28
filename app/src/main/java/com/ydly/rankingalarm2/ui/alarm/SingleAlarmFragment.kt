@@ -181,17 +181,17 @@ class SingleAlarmFragment : BaseFragment() {
         }
 
         // Calls to ViewModel functions
-        viewModel.also {
+        viewModel.apply {
 
             // Update dateString in case the time has changed and should be reflected in the date
-            it.updateDate()
+            updateDate()
 
             // Observe Observers
-            it.observeNewToast().observe(activity!!, newToastObserver)
-            it.observeInitialToggleSetEvent().observe(activity!!, initialToggleSetEventObserver)
-            it.observeToggleBackOffEvent().observe(activity!!, toggleBackOffEventObserver)
-            it.observeActivateEvent().observe(activity!!, activateEventObserver)
-            it.observeDeactivateEvent().observe(activity!!, deactivateEventObserver)
+            observeNewToast().observe(activity!!, newToastObserver)
+            observeInitialToggleSetEvent().observe(activity!!, initialToggleSetEventObserver)
+            observeToggleBackOffEvent().observe(activity!!, toggleBackOffEventObserver)
+            observeActivateEvent().observe(activity!!, activateEventObserver)
+            observeDeactivateEvent().observe(activity!!, deactivateEventObserver)
 
         }
     }

@@ -9,12 +9,11 @@ import org.jetbrains.anko.info
 import java.util.*
 
 class PastAlarmReceiver : BaseReceiver() {
-
-    override fun onReceive(context: Context, intent: Intent) {
-        ctx = context
+    override fun onReceive(context: Context?, intent: Intent?) {
+        ctx = context!!
 
         // String delivered from Intent
-        val stateString = intent.extras.getString("state")
+        val stateString = intent?.extras?.getString("state")
 
         // Generate Intent for PastAlarmRingingService
         val serviceIntent = Intent(ctx, PastAlarmRingingService::class.java)
@@ -32,4 +31,5 @@ class PastAlarmReceiver : BaseReceiver() {
             ctx.startService(serviceIntent)
         }
     }
+
 }

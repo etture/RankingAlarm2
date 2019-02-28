@@ -4,6 +4,7 @@
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
         xmlns:bind="http://schemas.android.com/apk/res-auto"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
         tools:context=".ui.ranking.RankingFragment"
         >
 
@@ -15,50 +16,59 @@
                 />
     </data>
 
-    <ScrollView
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+            android:id="@+id/rankFrag_swipeRefresh"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
+            app:onRefreshListener="@{() -> viewModel.swipeTest()}"
             >
 
-        <LinearLayout
+        <ScrollView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
                 >
 
-            <include
-                    android:id="@+id/rnkFrag_utilBtnsPane"
-                    layout="@layout/pane_util_btns"
-                    bind:viewModel="@{viewModel}"
-                    />
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/rnkFrag_agilityPane"
+            <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:orientation="vertical"
                     >
 
-            </androidx.constraintlayout.widget.ConstraintLayout>
+                <include
+                        android:id="@+id/rankFrag_utilBtnsPane"
+                        layout="@layout/pane_util_btns"
+                        bind:viewModel="@{viewModel}"
+                        />
 
-            <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/rnkFrag_diligencePane"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    >
+                <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/rankFrag_agilityPane"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        >
 
-            </androidx.constraintlayout.widget.ConstraintLayout>
+                </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/rnkFrag_relativePane"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    >
+                <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/rankFrag_diligencePane"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        >
 
-            </androidx.constraintlayout.widget.ConstraintLayout>
+                </androidx.constraintlayout.widget.ConstraintLayout>
 
-        </LinearLayout>
+                <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/rankFrag_relativePane"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        >
 
-    </ScrollView>
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </LinearLayout>
+
+        </ScrollView>
+
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
 </layout>
 
