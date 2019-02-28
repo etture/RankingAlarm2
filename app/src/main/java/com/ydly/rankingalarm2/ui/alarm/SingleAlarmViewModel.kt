@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import android.view.View
+import android.widget.Button
 import android.widget.ToggleButton
 import com.ydly.rankingalarm2.R
 import com.ydly.rankingalarm2.base.BaseViewModel
@@ -418,6 +419,7 @@ class SingleAlarmViewModel : BaseViewModel() {
     fun observeDeactivateEvent(): LiveData<SingleEvent<AlarmData>> = deactivateEvent
 
     fun onClickToggle(view: View) {
+
         val toggleButton = view as ToggleButton
         toggleChange(toggleButton.isChecked)
 

@@ -29,17 +29,10 @@ import javax.inject.Inject
 
 class RingAlarmViewModel : BaseViewModel() {
 
-    @Inject
-    lateinit var alarmDataRepo: AlarmDataRepository
-
-    @Inject
-    lateinit var alarmHistoryRepo: AlarmHistoryRepository
-
-    @Inject
-    lateinit var mainPrefs: SharedPreferences
-
-    @Inject
-    lateinit var gson: Gson
+    @Inject lateinit var alarmDataRepo: AlarmDataRepository
+    @Inject lateinit var alarmHistoryRepo: AlarmHistoryRepository
+    @Inject lateinit var mainPrefs: SharedPreferences
+    @Inject lateinit var gson: Gson
 
     private lateinit var alarmData: AlarmData
 
@@ -161,7 +154,9 @@ class RingAlarmViewModel : BaseViewModel() {
                                                 }
                                             )
 
-                                    } else {
+                                    }
+                                    // Response has error
+                                    else {
 
                                         val statusCode = response.code()
                                         val jsonErrorObj = JSONObject(response.errorBody()?.string())

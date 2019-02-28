@@ -5,6 +5,7 @@ import com.ydly.rankingalarm2.data.local.alarm.dao.AlarmHistoryDao
 import com.ydly.rankingalarm2.data.local.alarm.model.AlarmHistoryData
 import com.ydly.rankingalarm2.data.remote.model.request.AlarmHistoryBody
 import com.ydly.rankingalarm2.data.remote.AlarmRetrofitService
+import com.ydly.rankingalarm2.data.remote.model.response.PendingListResponse
 import com.ydly.rankingalarm2.data.remote.model.response.SampleResponse
 import com.ydly.rankingalarm2.data.remote.model.response.UploadResponse
 import io.reactivex.Flowable
@@ -82,9 +83,14 @@ class AlarmHistoryRepository : BaseRepository() {
         return alarmRetrofitService.uploadAlarmHistory(alarmHistoryBody)
     }
 
+    private fun _uploadPendingHistoryList(pendingHistoryList: List<AlarmHistoryBody>): Flowable<Response<PendingListResponse>> {
+        return alarmRetrofitService.uploadPendingHistoryList(pendingHistoryList)
+    }
+
     private fun _updateRank(originalId: Long, dayRank: Int, morningRank: Int) {
         alarmHistoryDao.updateRank(originalId, dayRank, morningRank)
     }
+
 
     private fun _getToday(year: Int, month: Int, dayOfMonth: Int): Flowable<List<AlarmHistoryData>> {
         return alarmHistoryDao.getToday(year, month, dayOfMonth)
@@ -93,7 +99,13 @@ class AlarmHistoryRepository : BaseRepository() {
 
     //========= Functions accessible by ViewModel ==========
 
-    fun insertAlarmHistory(alarmTimeInMillis: Long, takenTimeInMillis: Long?, hour: Int, minute: Int, wokeUp: Boolean): Long {
+    fun insertAlarmHistory(
+        alarmTimeInMillis: Long,
+        takenTimeInMillis: Long?,
+        hour: Int,
+        minute: Int,
+        wokeUp: Boolean
+    ): Long {
         return _insertAlarmHistory(alarmTimeInMillis, takenTimeInMillis, hour, minute, wokeUp)
     }
 
@@ -101,8 +113,16 @@ class AlarmHistoryRepository : BaseRepository() {
         return _uploadAlarmHistory(alarmHistoryBody)
     }
 
+    fun uploadPendingHistoryList(pendingHistoryList: List<AlarmHistoryBody>): Flowable<Response<PendingListResponse>> {
+        return _uploadPendingHistoryList(pendingHistoryList)
+    }
+
     fun updateRank(originalId: Long, dayRank: Int, morningRank: Int) {
         _updateRank(originalId, dayRank, morningRank)
+    }
+
+    fun bulkUpdateRanks() {
+
     }
 
     fun testHeader(): Flowable<SampleResponse> {

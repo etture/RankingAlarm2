@@ -27,3 +27,6 @@ const val PENDING_ALARM_HISTORY_JSON = "pendingAlarmHistoryJSON"
 
 // Action flag used for LocalBroadcastManager to indicate that RingAlarmActivity has been finish()-ed
 const val ACTION_ALARM_TURNED_OFF = "actionAlarmTurnedOff"
+
+// Used in RankingViewModel to turn SwipeRefreshLayout back off
+const val REFRESH_OFF = false

@@ -43,7 +43,7 @@ class RetrofitModule {
                     .build()
                 chain.proceed(newRequest)
             }
-            .connectTimeout(4, TimeUnit.SECONDS)
+            .connectTimeout(10, TimeUnit.SECONDS)
             .writeTimeout(4, TimeUnit.SECONDS)
             .readTimeout(4, TimeUnit.SECONDS)
             .build()

@@ -62,6 +62,9 @@ class RankingFragment : BaseFragment() {
         super.onResume()
         info("onResume()")
 
+        // Every time in onResume(), attempt to upload pending alarmHistory items
+        viewModel.attemptUploadPendingHistory()
+
         // Receiver to receive intent every minute
         minuteTickReceiver = object : BroadcastReceiver() {
             override fun onReceive(context: Context?, intent: Intent?) {
@@ -76,7 +79,6 @@ class RankingFragment : BaseFragment() {
                 }
             }
         }
-
         activity?.registerReceiver(minuteTickReceiver, IntentFilter(Intent.ACTION_TIME_TICK))
 
         // Observer to turn SwipeRefreshLayout back off
@@ -85,7 +87,6 @@ class RankingFragment : BaseFragment() {
                 binding.rankFragSwipeRefresh.isRefreshing = refreshStatus
             }
         }
-
         viewModel.apply {
             observeRefreshEvent().observe(activity!!, refreshObserver)
         }
@@ -100,5 +101,10 @@ class RankingFragment : BaseFragment() {
         viewModel.apply {
             observeRefreshEvent().removeObserver(refreshObserver)
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        viewModel.clearSubscription()
     }
 }
