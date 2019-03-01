@@ -26,11 +26,8 @@ import javax.inject.Inject
 
 class SingleAlarmViewModel : BaseViewModel() {
 
-    @Inject
-    lateinit var alarmDataRepo: AlarmDataRepository
-
-    @Inject
-    lateinit var alarmHistoryRepo: AlarmHistoryRepository
+    @Inject lateinit var alarmDataRepo: AlarmDataRepository
+    @Inject lateinit var alarmHistoryRepo: AlarmHistoryRepository
 
     private lateinit var myAlarm: AlarmData
 

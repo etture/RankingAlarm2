@@ -16,11 +16,8 @@ import javax.inject.Inject
 
 class AlarmHistoryRepository : BaseRepository() {
 
-    @Inject
-    lateinit var alarmHistoryDao: AlarmHistoryDao
-
-    @Inject
-    lateinit var alarmRetrofitService: AlarmRetrofitService
+    @Inject lateinit var alarmHistoryDao: AlarmHistoryDao
+    @Inject lateinit var alarmRetrofitService: AlarmRetrofitService
 
     init {
         info(alarmHistoryDao.toString())
@@ -91,6 +88,15 @@ class AlarmHistoryRepository : BaseRepository() {
         alarmHistoryDao.updateRank(originalId, dayRank, morningRank)
     }
 
+    private fun _bulkUpdateRanks(bulkUpdateList: List<Triple<Long, Int, Int>>) {
+        for (item in bulkUpdateList) {
+            alarmHistoryDao.updateRank(
+                originalId = item.first,
+                dayRank = item.second,
+                morningRank = item.third
+            )
+        }
+    }
 
     private fun _getToday(year: Int, month: Int, dayOfMonth: Int): Flowable<List<AlarmHistoryData>> {
         return alarmHistoryDao.getToday(year, month, dayOfMonth)
@@ -121,8 +127,8 @@ class AlarmHistoryRepository : BaseRepository() {
         _updateRank(originalId, dayRank, morningRank)
     }
 
-    fun bulkUpdateRanks() {
-
+    fun bulkUpdateRanks(bulkUpdateList: List<Triple<Long, Int, Int>>) {
+        _bulkUpdateRanks(bulkUpdateList)
     }
 
     fun testHeader(): Flowable<SampleResponse> {

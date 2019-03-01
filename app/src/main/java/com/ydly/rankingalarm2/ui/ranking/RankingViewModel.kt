@@ -26,12 +26,9 @@ import javax.inject.Inject
 
 class RankingViewModel : BaseViewModel() {
 
-    @Inject
-    lateinit var alarmHistoryRepo: AlarmHistoryRepository
-    @Inject
-    lateinit var mainPrefs: SharedPreferences
-    @Inject
-    lateinit var gson: Gson
+    @Inject lateinit var alarmHistoryRepo: AlarmHistoryRepository
+    @Inject lateinit var mainPrefs: SharedPreferences
+    @Inject lateinit var gson: Gson
 
     private val refreshEvent = MutableLiveData<SingleEvent<Boolean>>()
 
@@ -99,8 +96,18 @@ class RankingViewModel : BaseViewModel() {
                                 info("historyListJson NOT a valid JsonArray")
                             }
 
-                            // TODO repo.bulkUpdateRanks()
-
+                            // Bulk update the ranks received from the serve into local DB
+                            Flowable.fromCallable { alarmHistoryRepo.bulkUpdateRanks(bulkUpdateList) }
+                                .subscribeOn(Schedulers.io())
+                                .observeOn(AndroidSchedulers.mainThread())
+                                .subscribeBy(
+                                    onNext = {
+                                        info("bulkUpdateRanks() -> success")
+                                    },
+                                    onError = { error ->
+                                        info("bulkUpdateRanks() -> error: $error")
+                                    }
+                                )
                         }
                         // Response has error
                         else {
