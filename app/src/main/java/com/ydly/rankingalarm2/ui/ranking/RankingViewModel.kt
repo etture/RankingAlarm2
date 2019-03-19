@@ -136,6 +136,60 @@ class RankingViewModel : BaseViewModel() {
         refreshEvent.value = SingleEvent(REFRESH_OFF)
     }
 
+    private fun fetchAndUpdateNumPeople(year: Int, month: Int, dayOfMonth: Int) {
+
+        subscription += alarmHistoryRepo.fetchNumPeople(year, month, dayOfMonth)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribeBy(
+                onNext = { response ->
+                    if(response.isSuccessful) {
+
+                        val returnedYear = response.body()?.year
+                        val returnedMonth = response.body()?.month
+                        val returnedDayOfMonth = response.body()?.dayOfMonth
+                        val dayNumPeople = response.body()?.dayNumPeople
+                        val morningNumPeople = response.body()?.morningNumPeople
+
+                        info("fetchAndUpdateNumPeople() -> fetch success year: $returnedYear, month: $returnedMonth, dayOfMonth: $returnedDayOfMonth, dayNumPeople: $dayNumPeople, morningNumPeople: $morningNumPeople")
+
+                        Flowable.fromCallable {
+                            alarmHistoryRepo.updateNumPeople(
+                                year = returnedYear!!,
+                                month = returnedMonth!!,
+                                dayOfMonth = returnedDayOfMonth!!,
+                                dayNumPeople = dayNumPeople!!,
+                                morningNumPeople = morningNumPeople!!
+                            )
+                        }
+                            .subscribeOn(Schedulers.io())
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribeBy(
+                                onNext = {
+                                    info("fetchAndUpdateNumPeople() -> update success")
+                                },
+                                onError = { error ->
+                                    info("fetchAndUpdateNumPeople() -> update fail, error: $error")
+                                }
+                            )
+
+                    } else {
+
+                        val statusCode = response.code()
+                        val jsonErrorObj = JSONObject(response.errorBody()?.string())
+                        val mError: ErrorResponse =
+                            gson.fromJson(jsonErrorObj.toString(), ErrorResponse::class.java)
+                        info("fetchAndUpdateNumPeople() -> fetch error from server, statusCode: $statusCode, error message: ${mError.message}")
+                    }
+
+                },
+                onError = { error ->
+                    info("fetchAndUpdateNumPeople() -> update fail, error: $error")
+                }
+            )
+    }
+
+
     //========= Functions accessible by View (data manipulation) ==========
 
     // Observed by View to turn swipeRefresh back off
@@ -146,6 +200,11 @@ class RankingViewModel : BaseViewModel() {
     fun attemptUploadPendingHistory() {
         info("attemptUploadPendingHistory()")
         uploadPendingHistory()
+    }
+
+    fun updateLatestNumPeople(year: Int, month: Int, dayOfMonth: Int) {
+        info("fetchNumPeople()")
+        fetchAndUpdateNumPeople(year, month, dayOfMonth)
     }
 
     fun clearSubscription() {

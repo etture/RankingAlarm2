@@ -4,7 +4,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import android.view.View
-import android.widget.Button
 import android.widget.ToggleButton
 import com.ydly.rankingalarm2.R
 import com.ydly.rankingalarm2.base.BaseViewModel
@@ -161,7 +160,7 @@ class SingleAlarmViewModel : BaseViewModel() {
         info("initDisplayedElements() -> hour: ${dateTimeUtil.hour24}, minute: ${dateTimeUtil.minute}, isToggled: ${myAlarm.isToggledOn}")
 
         // Set data-binded ToggleButton textOff text ("challenge!" or just "set alarm")
-        subscription += alarmHistoryRepo.getToday(
+        subscription += alarmHistoryRepo.getOneDay(
             year = dateTimeUtil.year,
             month = dateTimeUtil.month,
             dayOfMonth = dateTimeUtil.dayOfMonth

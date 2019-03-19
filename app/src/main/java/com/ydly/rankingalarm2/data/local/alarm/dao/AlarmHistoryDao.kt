@@ -13,7 +13,7 @@ interface AlarmHistoryDao {
     fun getAll(): Flowable<List<AlarmHistoryData>>
 
     @Query("SELECT * FROM alarmHistoryData WHERE year = :year AND month = :month AND dayOfMonth = :dayOfMonth LIMIT 1")
-    fun getToday(year: Int, month: Int, dayOfMonth: Int): Flowable<List<AlarmHistoryData>>
+    fun getOneDay(year: Int, month: Int, dayOfMonth: Int): Flowable<List<AlarmHistoryData>>
 
     @Insert(onConflict = IGNORE)
     fun insert(alarmHistory: AlarmHistoryData): Long
@@ -23,6 +23,9 @@ interface AlarmHistoryDao {
 
     @Query("UPDATE alarmHistoryData SET dayRank = :dayRank AND morningRank = :morningRank WHERE id = :originalId")
     fun updateRank(originalId: Long, dayRank: Int, morningRank: Int)
+
+    @Query("UPDATE alarmHistoryData SET dayNumPeople = :dayNumPeople AND morningNumPeople = :morningNumPeople WHERE year = :year AND month = :month AND dayOfMonth = :dayOfMonth")
+    fun updateNumPeople(year: Int, month: Int, dayOfMonth: Int, dayNumPeople: Int, morningNumPeople: Int)
 
     @Query("DELETE FROM alarmHistoryData")
     fun deleteAll()

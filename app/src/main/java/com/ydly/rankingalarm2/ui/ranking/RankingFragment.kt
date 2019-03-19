@@ -74,8 +74,15 @@ class RankingFragment : BaseFragment() {
                     val calendar = Calendar.getInstance()
                     val hour = calendar.get(Calendar.HOUR_OF_DAY)
                     val minute = calendar.get(Calendar.MINUTE)
-
                     info("minuteTickReceiver -> minute ticked -> hour: $hour, minute: $minute")
+
+                    // When day has passed
+                    if (hour == 0 && minute == 0) {
+                        val year = calendar.get(Calendar.YEAR)
+                        val month = calendar.get(Calendar.MONTH)
+                        val dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH)
+                        viewModel.updateLatestNumPeople(year, month, dayOfMonth)
+                    }
                 }
             }
         }

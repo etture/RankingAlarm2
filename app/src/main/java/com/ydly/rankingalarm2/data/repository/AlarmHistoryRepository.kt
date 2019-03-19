@@ -5,10 +5,14 @@ import com.ydly.rankingalarm2.data.local.alarm.dao.AlarmHistoryDao
 import com.ydly.rankingalarm2.data.local.alarm.model.AlarmHistoryData
 import com.ydly.rankingalarm2.data.remote.model.request.AlarmHistoryBody
 import com.ydly.rankingalarm2.data.remote.AlarmRetrofitService
+import com.ydly.rankingalarm2.data.remote.model.response.NumPeopleResponse
 import com.ydly.rankingalarm2.data.remote.model.response.PendingListResponse
 import com.ydly.rankingalarm2.data.remote.model.response.SampleResponse
 import com.ydly.rankingalarm2.data.remote.model.response.UploadResponse
 import io.reactivex.Flowable
+import io.reactivex.rxkotlin.plusAssign
+import io.reactivex.rxkotlin.subscribeBy
+import io.reactivex.schedulers.Schedulers
 import org.jetbrains.anko.info
 import retrofit2.Response
 import java.util.*
@@ -16,8 +20,10 @@ import javax.inject.Inject
 
 class AlarmHistoryRepository : BaseRepository() {
 
-    @Inject lateinit var alarmHistoryDao: AlarmHistoryDao
-    @Inject lateinit var alarmRetrofitService: AlarmRetrofitService
+    @Inject
+    lateinit var alarmHistoryDao: AlarmHistoryDao
+    @Inject
+    lateinit var alarmRetrofitService: AlarmRetrofitService
 
     init {
         info(alarmHistoryDao.toString())
@@ -98,8 +104,16 @@ class AlarmHistoryRepository : BaseRepository() {
         }
     }
 
-    private fun _getToday(year: Int, month: Int, dayOfMonth: Int): Flowable<List<AlarmHistoryData>> {
-        return alarmHistoryDao.getToday(year, month, dayOfMonth)
+    private fun _fetchNumPeople(year: Int, month: Int, dayOfMonth: Int): Flowable<Response<NumPeopleResponse>> {
+        return alarmRetrofitService.fetchNumPeople(year, month, dayOfMonth)
+    }
+
+    private fun _updateNumPeople(year: Int, month: Int, dayOfMonth: Int, dayNumPeople: Int, morningNumPeople: Int) {
+        alarmHistoryDao.updateNumPeople(year, month, dayOfMonth, dayNumPeople, morningNumPeople)
+    }
+
+    private fun _getOneDay(year: Int, month: Int, dayOfMonth: Int): Flowable<List<AlarmHistoryData>> {
+        return alarmHistoryDao.getOneDay(year, month, dayOfMonth)
     }
 
 
@@ -131,13 +145,21 @@ class AlarmHistoryRepository : BaseRepository() {
         _bulkUpdateRanks(bulkUpdateList)
     }
 
+    fun fetchNumPeople(year: Int, month: Int, dayOfMonth: Int): Flowable<Response<NumPeopleResponse>> {
+        return _fetchNumPeople(year, month, dayOfMonth)
+    }
+
+    fun updateNumPeople(year: Int, month: Int, dayOfMonth: Int, dayNumPeople: Int, morningNumPeople: Int) {
+        _updateNumPeople(year, month, dayOfMonth, dayNumPeople, morningNumPeople)
+    }
+
     fun testHeader(): Flowable<SampleResponse> {
         info("testHeader()")
         return alarmRetrofitService.testHeader()
     }
 
-    fun getToday(year: Int, month: Int, dayOfMonth: Int): Flowable<List<AlarmHistoryData>> {
-        return _getToday(year, month, dayOfMonth)
+    fun getOneDay(year: Int, month: Int, dayOfMonth: Int): Flowable<List<AlarmHistoryData>> {
+        return _getOneDay(year, month, dayOfMonth)
     }
 
     fun deleteAllLocal() {
