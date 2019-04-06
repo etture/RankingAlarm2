@@ -1,11 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#FFFFFF</color>
-    <color name="colorPrimaryDark">#FFFFFF</color>
-    <color name="colorAccent">#03A9F4</color>
-    <color name="colorConfirm">#31B135</color>
-    <color name="colorCancel">#FC1B1B</color>
+    <color name="colorPrimary">#faf5e7</color>
+    <color name="colorPrimaryDark">#33000000</color>
+    <color name="colorAccent">#ee5f35</color>
+    <color name="colorConfirm">#ee5f35</color>
+    <color name="colorCancel">#4d2317</color>
     <color name="white">#FFFFFF</color>
     <color name="gray">#9E9E9E</color>
-    <color name="black">#000000</color>
+
+    <!-- Main colors -->
+    <color name="milk_chocolate">#624b1f</color>
+    <color name="black">#050505</color>
+    <color name="tomato">#ee5f35</color>
+    <color name="light_khaki">#faf5e7</color>
+    <color name="milk_chocolate_two">#4d2317</color>
+    <color name="black_20">#33000000</color>
+
 </resources>

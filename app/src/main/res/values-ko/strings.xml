@@ -68,4 +68,24 @@
     <string name="alarmSet">알람 설정 완료!</string>
     <string name="alarmCleared">알람 해제</string>
     <string name="challenge">도전!</string>
+    <string name="average">평균</string>
+    <string name="recentGrades">최근 성적</string>
+    <string name="relativeGrading">상대 평가</string>
+    <string name="diligence">성실도</string>
+    <string name="relativeGrading_today">오늘 랭킹</string>
+    <string name="relativeGrading_average">평균 랭킹 (최근 3주)</string>
+    <string name="relativeGrading_overall">전체: %1$s</string>
+    <string name="relativeGrading_morning">아침: %1$s</string>
+    <string name="diligence_consecutive">알람 연속 설정: %1$d일째</string>
+    <string name="diligence_rate">알람 완수율: %1$d%</string>
+    <string name="diligence_time">평균 기상 시간: %1s:%2s</string>
+    <string name="agility_timeUntil">알람 끌 때까지 걸린 시간</string>
+    <string name="agility_today">오늘 (%1$s %2$s): %3$d초</string>
+    <string name="agility_average">평균 (최근 일주일): %1$d초</string>
+    <string name="agility">민첩성</string>
+    <string name="first_place">%1$d등</string>
+    <string name="second_place">%1$d등</string>
+    <string name="third_place">%1$d등</string>
+    <string name="nth_place">%1$d등</string>
+
 </resources>

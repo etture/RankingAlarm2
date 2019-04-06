@@ -1,6 +1,7 @@
 package com.ydly.rankingalarm2.injection.module
 
 import android.net.ConnectivityManager
+import com.facebook.stetho.okhttp3.StethoInterceptor
 import com.ydly.rankingalarm2.data.remote.AlarmRetrofitService
 import com.ydly.rankingalarm2.injection.scope.RepositoryScope
 import com.ydly.rankingalarm2.util.BASE_URL
@@ -35,6 +36,7 @@ class RetrofitModule {
     @Provides
     fun provideAuthTokenRetrofitInterface(retrofitBuilder: Retrofit.Builder, ci: ConnectivityInterceptor): Retrofit {
         val authTokenClient = OkHttpClient.Builder()
+            .addNetworkInterceptor(StethoInterceptor()) // Stetho network inspection
             .addInterceptor(ci)
             .addInterceptor { chain ->
                 val request = chain.request()

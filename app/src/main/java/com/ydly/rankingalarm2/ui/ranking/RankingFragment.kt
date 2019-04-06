@@ -51,7 +51,7 @@ class RankingFragment : BaseFragment() {
         info("onCreateView()")
 
         binding.rankFragSwipeRefresh.setColorSchemeResources(
-            R.color.colorAccent, R.color.colorCancel, R.color.colorConfirm, R.color.black
+            R.color.tomato, R.color.milk_chocolate, R.color.milk_chocolate_two
         )
 
 

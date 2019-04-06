@@ -2,6 +2,7 @@ package com.ydly.rankingalarm2.base
 
 import android.app.Application
 import android.content.Context
+import com.facebook.stetho.Stetho
 import com.ydly.rankingalarm2.util.DaggerComponentManager
 import com.ydly.rankingalarm2.injection.component.RepositoryInjector
 import com.ydly.rankingalarm2.injection.component.ServiceInjector
@@ -11,7 +12,7 @@ import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.info
 import java.util.*
 
-class BaseApplication: Application(), AnkoLogger {
+class BaseApplication : Application(), AnkoLogger {
 
     private lateinit var componentManager: DaggerComponentManager
 
@@ -35,6 +36,8 @@ class BaseApplication: Application(), AnkoLogger {
         initComponentManager(this)
         initComponents()
         setUUID()
+
+        Stetho.initializeWithDefaults(this)
     }
 
     private fun initComponentManager(context: Context) {

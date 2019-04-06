@@ -5,6 +5,7 @@
         >
 
     <data>
+
         <variable
                 name="viewModel"
                 type="com.ydly.rankingalarm2.ui.ranking.RankingViewModel"

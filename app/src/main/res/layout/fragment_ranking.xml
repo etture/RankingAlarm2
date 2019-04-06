@@ -38,31 +38,63 @@
                         android:id="@+id/rankFrag_utilBtnsPane"
                         layout="@layout/pane_util_btns"
                         bind:viewModel="@{viewModel}"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="18dp"
                         />
 
-                <androidx.constraintlayout.widget.ConstraintLayout
-                        android:id="@+id/rankFrag_agilityPane"
+                <include
+                        android:id="@+id/rankFrag_summaryGradesPane"
+                        layout="@layout/pane_summary_grades"
+                        bind:viewModel="@{viewModel}"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        >
+                        android:layout_marginBottom="18dp"
+                        android:layout_marginStart="19dp"
+                        android:layout_marginEnd="19dp"
 
-                </androidx.constraintlayout.widget.ConstraintLayout>
+                    />
 
-                <androidx.constraintlayout.widget.ConstraintLayout
+                <include
+                        android:id="@+id/rankFrag_recentGradesPane"
+                        layout="@layout/pane_recent_grades"
+                        bind:viewModel="@{viewModel}"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="18dp"
+                        android:layout_marginStart="19dp"
+                        android:layout_marginEnd="19dp"
+                    />
+
+                <include
+                        android:id="@+id/rankFrag_relativeGradingPane"
+                        layout="@layout/pane_relative_grading"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="18dp"
+                        android:layout_marginStart="19dp"
+                        android:layout_marginEnd="19dp"
+                    />
+
+                <include
                         android:id="@+id/rankFrag_diligencePane"
+                        layout="@layout/pane_diligence"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        >
+                        android:layout_marginBottom="18dp"
+                        android:layout_marginStart="19dp"
+                        android:layout_marginEnd="19dp"
+                        />
 
-                </androidx.constraintlayout.widget.ConstraintLayout>
-
-                <androidx.constraintlayout.widget.ConstraintLayout
-                        android:id="@+id/rankFrag_relativePane"
+                <include
+                        android:id="@+id/rankFrag_agilityPane"
+                        layout="@layout/pane_agility"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        >
-
-                </androidx.constraintlayout.widget.ConstraintLayout>
+                        android:layout_marginBottom="18dp"
+                        android:layout_marginStart="19dp"
+                        android:layout_marginEnd="19dp"
+                        />
 
             </LinearLayout>
 

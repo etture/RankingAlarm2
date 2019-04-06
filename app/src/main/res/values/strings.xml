@@ -67,8 +67,27 @@
     <string name="tomorrow">Tomorrow</string>
     <string name="alarmSet">Alarm has been set!</string>
     <string name="alarmCleared">Alarm has been cleared</string>
+    <string name="average">Average</string>
+    <string name="recentGrades">Recent Grades</string>
+    <string name="relativeGrading">Relative Grading</string>
+    <string name="diligence">Diligence</string>
+    <string name="agility">Agility</string>
 
-
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="relativeGrading_today">Today\'s Rank</string>
+    <string name="relativeGrading_average">Average Rank (last 3 weeks)</string>
+    <string name="relativeGrading_overall">Total: %1$s</string>
+    <string name="diligence_consecutive">Consecutive Alarms: %1$d days</string>
+    <string name="diligence_rate">Alarm Completion Rate: %1$d%</string>
+    <string name="diligence_time">Average Waking Time: %1s:%2s</string>
+    <string name="agility_timeUntil">Time Taken Until Waking Up</string>
+    <string name="agility_today">Today (%1$s %2$s): %3$d seconds</string>
+    <string name="agility_average">Average (past week): %1$d seconds</string>
+    <string name="relativeGrading_morning">Morning: %1$s</string>
+
+    <string name="first_place">%1$dst</string>
+    <string name="second_place">%1$dnd</string>
+    <string name="third_place">%1$drd</string>
+    <string name="nth_place">%1$dth</string>
+
 </resources>
